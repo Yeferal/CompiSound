@@ -5,6 +5,14 @@
  */
 package com.yeferal.desktopreproductor;
 
+import com.yeferal.desktopreproductor.ast.main.Node;
+import com.yeferal.desktopreproductor.ast.main.Primitive;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tree.ConverterDataType;
+import com.yeferal.desktopreproductor.gui.MainWindow;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Usuario
@@ -12,7 +20,18 @@ package com.yeferal.desktopreproductor;
 public class Main {
     
     public static void main(String[] args) {
-        System.out.println("Hola humano!!!");
+//        MainWindow mainWindow = new MainWindow();
+//        mainWindow.setVisible(true);
+//        List<Node> list = new ArrayList<>();
+//        list.add(new Primitive(null, DataType.ENTERO, 1));
+//        list.add((Node) null);
+//        list.add(new Primitive(null, DataType.ENTERO, 3));
+//        for (int i = 0; i < list.size(); i++) {
+//            System.out.println(list.get(i));
+//        }    
+
+//        System.out.println(DataType.ENTERO.ordinal());
+        
     }
     
 }

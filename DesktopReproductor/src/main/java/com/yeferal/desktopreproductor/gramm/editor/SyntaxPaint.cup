@@ -1,0 +1,154 @@
+//codigo usuario
+package com.yeferal.desktopreproductor.gramm.editor;
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.Stack;
+
+
+//Codigo para el parser, variables, metodos
+parser code
+{:
+    //codigo
+
+	public void syntax_error(Symbol s) {
+		//System.out.println("ERROR: Columna: "+(s.left+1)+", Fila: "+(s.right+1)+", Token: "+s.value);
+	}
+
+	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+		//System.out.println("ERROR: Columna: "+(s.left+1)+", Fila: "+(s.right+1)+", Token: "+s.value);
+	}
+
+:}
+
+//Coidgo para las acciones gramaticales
+
+action code
+{:
+    
+:}
+
+//Declaraciones 
+terminal COMENTARIO_LINEA, COMENTARIO_BLOQUE;
+terminal PISTA, IDENTIFICADOR, EXTIENDE, COMA, PUNTO_COMA;
+terminal ENTERO, DOBLE, BOOLEAN, CARACTER_RSV, CADENA_RSV;
+terminal IGUAL_IGUAL, DIFERENTE, MAYOR_Q, MENOR_Q, MAYOR_IGUAL, MENOR_IGUAL, IS_NULL;
+terminal AND, NAND, OR, NOR, XOR, NOT;
+terminal MAS, MENOS, POR, DIVISION, MODULO, POTENCIA;
+terminal KEEP, VAR, IGUAL;
+terminal NUMERO, DECIMAL, CADENA, TRUE, FALSE, CARACTER;
+terminal MAS_IGUAL, MAS_MAS, MENOS_MENOS;
+terminal ARREGLO, CORCHETE_A, CORCHETE_C, LLAVE_A, LLAVE_C;
+terminal SI, SINO, PA_A, PA_C;
+terminal SWITCH, CASO, SALIR, DEFAULT;
+terminal PARA, MIENTRAS, HACER, CONTINUAR;
+terminal RETORNAR, VOID;
+terminal REPRODUCIR, ESPERAR, ORDENAR, ASCENDENTE, DESCENDENTE, PARES, IMPARES, PRIMOS;
+terminal SUMARIZAR, LONGITUD, MENSAJE, PRINCIPAL;
+terminal DO, RE, MI, FA, SOL, LA, DO_S, RE_S, FA_S, SOL_S, LA_S, SINO_SI;
+
+
+
+// declaracion no terminales
+non terminal String INICIO;
+/*non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+*/
+
+
+
+start with INICIO;
+
+//Reglas Semanticas
+
+
+INICIO ::= 
+			 COMENTARIO_LINEA INICIO
+			|COMENTARIO_BLOQUE INICIO
+			|PISTA  INICIO
+			|IDENTIFICADOR INICIO
+			|EXTIENDE INICIO
+			|COMA INICIO
+			|PUNTO_COMA INICIO
+			|ENTERO INICIO
+			|DOBLE INICIO
+			|BOOLEAN INICIO
+			|CARACTER_RSV INICIO
+			|CADENA_RSV INICIO
+			|IGUAL_IGUAL INICIO
+			|DIFERENTE INICIO
+			|MAYOR_Q INICIO
+			|MENOR_Q INICIO
+			|MAYOR_IGUAL INICIO
+			|MENOR_IGUAL INICIO
+			|IS_NULL INICIO
+			|AND INICIO
+			|NAND INICIO
+			|OR INICIO
+			|NOR INICIO
+			|XOR INICIO
+			|NOT INICIO
+			|MAS INICIO
+			|MENOS INICIO
+			|POR INICIO
+			|DIVISION INICIO
+			|MODULO INICIO
+			|POTENCIA INICIO
+			|KEEP INICIO
+			|VAR INICIO
+			|IGUAL INICIO
+			|NUMERO INICIO
+			|DECIMAL INICIO
+			|CADENA INICIO
+			|TRUE INICIO
+			|FALSE INICIO
+			|CARACTER INICIO
+			|MAS_IGUAL INICIO
+			|MAS_MAS INICIO
+			|MENOS_MENOS INICIO
+			|ARREGLO INICIO
+			|CORCHETE_A INICIO
+			|CORCHETE_C INICIO
+			|LLAVE_A INICIO
+			|LLAVE_C INICIO
+			|SI INICIO
+			|SINO INICIO
+			|PA_A INICIO
+			|PA_C INICIO
+			|SWITCH INICIO
+			|CASO INICIO
+			|SALIR INICIO
+			|DEFAULT INICIO
+			|PARA INICIO
+			|MIENTRAS INICIO
+			|HACER INICIO
+			|CONTINUAR INICIO
+			|RETORNAR INICIO
+			|VOID INICIO
+			|REPRODUCIR INICIO
+			|ESPERAR INICIO
+			|ORDENAR INICIO
+			|ASCENDENTE INICIO
+			|DESCENDENTE INICIO
+			|PARES INICIO
+			|IMPARES INICIO
+			|PRIMOS INICIO
+			|SUMARIZAR INICIO
+			|LONGITUD INICIO
+			|MENSAJE INICIO
+			|PRINCIPAL INICIO
+			|DO INICIO
+			|RE INICIO
+			|MI INICIO
+			|FA INICIO
+			|SOL INICIO
+			|LA INICIO
+			|DO_S INICIO
+			|RE_S INICIO
+			|FA_S INICIO
+			|SOL_S INICIO
+			|LA_S INICIO
+			|SINO_SI INICIO
+			|
+;

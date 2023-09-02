@@ -1,0 +1,117 @@
+Pista pista1{
+	>>cuerpo de la pista
+	var entero num1, num2,num3;
+	keep var doble doble1 = 0.5;
+	keep var cadena cadena1= "hola";
+	var caracter caracter1, caracter2='a';
+	var boolean flag1, flag2, falag3 = cadena1=="hola";
+	var boolean flag22= !(flag1);
+	var entero arreglo arr1 [5^3]; >> arreglo con 1 dimension y errores semanticos;
+	var cadena cad1, cad2, cad3 = cadena1 + " aca empieza otra linea :D";
+	>> en la linea anterior se ejemplifica que se puede hacer una inicializacion que usa a otra variable
+
+    >> funcion principal
+	Principal(){
+		>>inicializacion
+		num1=((1*2)/(1+5))%2; >>se vuelve un entero
+		num3=3;
+		caracter1='#n';
+		>>termina de iniciar var
+		funcion1();
+		funcion5();
+		funcion6();
+		funcionOrdenar();
+	}
+	
+	entero funcion1(){
+		var entero arreglo arre1 [3]={5,10,5+num2*num3};
+		var entero arreglo arre2 [3][2]={{0,1,2},{3,4,5}};
+		var entero arreglo arre3 [2][2][2]={{{1,2},{3,4}},{{5,6},{7,8}}};
+		retornar num2;
+	}
+	
+	keep entero funcion2(entero p1,entero p2){
+		si(cadena1){
+			>>imprimier algo
+			retornar 1;
+		}
+		sino si (num1==3){
+			>>imprimier algo
+			retornar 2;
+		}
+		sino{
+			retornar 0;
+		}
+	}
+		
+	funcion3(entero n){
+		switch(n){
+			caso 1:
+				>> Sentencias caso 1
+				salir;
+			caso 2:
+				>> Sentencias caso 2
+				salir;
+			caso 3:
+				>> Sentencias caso 3
+				salir;
+			default:
+				>> Sentencias default
+		}
+	}
+			
+		
+	funcoin4(){
+		var entero j = 5;
+		para(var entero i = 0; i<j; i++){
+			>>print i
+		}
+	}
+		
+	funcion5(){
+		mientras(cadena1!="hola"){
+			cadena1= "hola";
+		}
+	}
+		
+	funcion6(){
+		hacer{
+			cadena1= "hola";
+		}mientras(cadena1!="hola")
+	}
+		
+	keep funcion7(){
+		Reproducir(Do, (2*1)+1, 50*num2+62*6, 3);
+		var entero tiempo = Reproducir(Re, 6, 15000, 1);
+		Espera(2000, 8);
+		Reproducir(Re,4, 1500,3);
+		Esperar(200,5);
+		Reproducir(Re,4, 1500,3);
+		Reproducir(Mi,6, 3500,5);
+		Reproducir(Sol,7, 1500,2);
+		Esperar(200,3);
+		Reproducir(Fa,5, 500,3);
+	}
+        
+	funcionOrdenar(){
+		var entero arreglo arre1 [3]={5,10,5+num2*num3};
+		Ordenar (arre1, descendente);
+		Sumarizar(arre1); >> valor de cad:
+		var entero resultado;
+		resultado=Longitud(arre1); >> valor de resultado:
+		Mensaje("resultados: "+resultado);
+		Mensaje("Suma: "+Sumarizar(arre1));
+	}
+}	
+<-
+Pista pista 2 extiende pista1
+	>>cuerpo de la pista
+
+	>> funcion principal
+	Principal()
+		funcion1()
+		funcion5()
+		funcion6()
+		funcionOrdenar()
+
+->

@@ -1,0 +1,828 @@
+//codigo usuario
+package com.yeferal.desktopreproductor.gramm.main;
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import com.yeferal.desktopreproductor.ast.errors.*;
+import com.yeferal.desktopreproductor.ast.main.*;
+import com.yeferal.desktopreproductor.ast.main.conditionals.*;
+import com.yeferal.desktopreproductor.ast.main.instructions.*;
+import com.yeferal.desktopreproductor.ast.main.instructions.notas.*;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+
+//Codigo para el parser, variables, metodos
+parser code
+{:
+    //codigo
+	List<ErrorGramm> syntaxErrors = new ArrayList<>();
+	List<Node> listTrack = new ArrayList<>();
+
+	public void syntax_error(Symbol s) {
+		int row = s.right+1;
+		int column = s.left+1;
+		String token = (String) s.value;
+		addError(row, column, ErrorType.SYNTACTIC, token, "Secuencia de Token no reconocida.");
+		System.out.println("ERROR: Fila: "+(s.right+1)+", Columna: "+(s.left+1)+", Token: "+s.value);
+
+	}
+
+	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+		if(cur_token.toString().equals("#0")){
+			//String message = s.toString();
+			//StringBuilder m = new StringBuilder("Error: ");
+			String token =  "Fin del archivo";
+			int column = cur_token.left+1;
+			int row = cur_token.right+1;
+			addError(row, column, ErrorType.SYNTACTIC, token, "No se pudo recuperar y seguir analizando, no se encontraron mas tokens.");
+            
+        }else{
+			//String message = s.toString();
+			//StringBuilder m = new StringBuilder("Error: ");
+			String token =  (String) cur_token.value;
+			int column = cur_token.left+1;
+			int row = cur_token.right+1;
+			addError(row, column, ErrorType.SYNTACTIC, token, "No se pudo recuperar y seguir analizando.");
+			
+        }
+		System.out.println("No se pudo recuperar y seguir analizando, no se encontraron mas tokens.");
+	}
+
+	public void addError(int row, int column, ErrorType errorType, String token, String description){
+        syntaxErrors.add(new ErrorGramm(new PositionToken(row, column), errorType, token, description));
+    }
+
+	public List<ErrorGramm> getSyntaxErrors(){
+        return syntaxErrors;
+    }
+
+	public List<Node> getListTracks(){
+		return listTrack;
+	}
+
+:}
+
+//Coidgo para las acciones gramaticales
+
+action code
+{:
+    
+:}
+
+//Declaraciones 
+terminal comentario_linea, comentario_bloque;
+terminal pista, identificador, extiende, coma, punto_coma, dos_puntos;
+terminal entero, doble, boolean_rsv, caracter_rsv, cadena_rsv;
+terminal igual_igual, diferente, mayor_q, menor_q, mayor_igual, menor_igual, is_null;
+terminal and, nand, or, nor, xor, not;
+terminal mas, menos, por, div, modulo, potencia;
+terminal keep, var, igual;
+terminal cadena, caracter;
+terminal Boolean true_rsv, false_rsv;
+terminal Double decimal;
+terminal Integer numero;
+// terminal caracter_special;
+terminal caracter_special_comilla_simple, caracter_special_hashtag, caracter_special_r;
+terminal caracter_special_t, caracter_special_n;
+terminal mas_igual, mas_mas, menos_menos;
+terminal arreglo, corchete_a, corchete_c, llave_a, llave_c;
+terminal si, sino, sino_si, pa_a, pa_c;
+terminal switch_rsv, caso, salir, default_rsv;
+terminal para, mientras, hacer, continuar;
+terminal retornar, void_rsv;
+terminal reproducir, esperar, ordenar, ascendente, descendente, pares, impares, primos;
+terminal sumarizar, longitud, mensaje, principal;
+terminal do_rsv, re, mi, fa, sol, la, do_s, re_s, fa_s, sol_s, la_s;
+
+
+
+// declaracion no terminales
+non terminal INICIO, BLANCOS, COMENTARIOS, CODIGO, STRUCT_PISTA, EXTIENDE_STATE;
+non terminal STRUCT_EXTIENDE, STRUCT_CODE, STRUCT_CODE_MAIN, STRUCT_DECLARACION_VARIABLE_GLOBAL;
+non terminal STRUCT_DECLARACION_VARIABLE, DECLARACION_VARIABLE_STATE;
+non terminal DECLARACION_VARIABLE_GLOBAL_STATE, KEEP_STATE, TIPO_DATO_STATE, ASIGNACION_STATE;
+non terminal STRUCT_ASIGNACION_VAR, STRUCT_DECLARACION_ARREGLO_GLOBAL, DECLARACION_ARREGLO_GLOBAL_STATE, STRUCT_DIMENSION_ARREGLO;
+non terminal STRUCT_DECLARACION_ARREGLO, DECLARACION_ARREGLO_STATE, VALOR_ARREGLO_MULTI_STATE;
+non terminal ASIGNACION_ARREGLO_STATE, VALOR_ARREGLO_STATE, VALOR_UNIT_ARREGLO, STRUCT_ASIGNACION_ARREGLO;
+non terminal DIMESION_POS_ARREGLO, CONDICIONAL_SI_SINO_SI, CONDICIONAL_SI_SINO_SI_STATE;
+non terminal STRUCT_CONDICIONAL_SI, STRUCT_CONDICIONAL_SINO_SI, STRUCT_CONDICIONAL_SINO;
+non terminal STRUCT_CONDICIONAL_SWITCH, CASO_STATE, STRUCT_CASO, VALOR_CASO, STRUCT_PARA;
+non terminal ASIG_PARA_STATE, COND_PARA_STATE, SENTENCIAS_PARA_STATE, STRUCT_MIENTRAS;
+non terminal STRUCT_HACER_MIENTRAS, STRUCT_FUNCION_PROC, TIPO_DATO_STATE_OPTIONAL, STRUCT_PARAMS_STATE;
+non terminal STRUCT_PARAMS, STRUCT_REPRODUCIR, NOTA_STATE, OCTAVA_STATE, TIEMPO_MS_STATE, CANAL_STATE;
+non terminal STRUCT_ESPERAR, STRUCT_ORDENAR, VALOR_ORDENAR_STATE, TIPO_ORDEN, STRUCT_SUMARIZAR;
+non terminal STRUCT_LONGITUD, STRUCT_MENSAJE, STRUCT_METODO_PRINCIPAL, VALOR_DATA, STRUCT_LLAMADA_FUNCION;
+non terminal PARAMAS_STATE_LLAMADA, STRUCT_LLAMADA_ARREGLO, OPERACION_ARITMETICA, OPERACION_RACIONAL;
+non terminal OPERACION_LOGICA, VALOR_STATE, VALOR_CODICIONAL, SENTENCIAS_CODIGO, SENTENCIAS_CODIGO_CASO;
+non terminal SENTENCIAS_CODIGO_FUNC_PROC, STRUCT_RETORNAR;
+// non terminal ;
+/*non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+*/
+ 
+//presedencia de menor a mayor
+//Precediencia operadores logicos
+precedence left or, nor, xor;
+precedence left and, nand;
+precedence right not;
+
+precedence left igual_igual, diferente, mayor_q, menor_q, mayor_igual, menor_igual;
+precedence right is_null;
+//Presedencia operadores matematicos
+precedence left mas, menos;
+precedence left modulo, div, por;
+precedence left potencia;
+
+
+
+start with INICIO;
+
+//Reglas Semanticas
+
+
+INICIO ::= CODIGO:b {:List<Node> listTrack = (List<Node>) b; parser.listTrack = listTrack; RESULT = listTrack;:};
+
+/*------------------------------------------------------------------------------LO QUE VENGA AL INICIO*/
+BLANCOS ::=	 COMENTARIOS BLANCOS
+			| ;
+
+/*------------------------------------------------------------------------------COMENTARIOS*/
+
+COMENTARIOS ::=  comentario_linea
+				|comentario_bloque;
+
+/*------------------------------------------------------------------------------CODIGO PISTA*/
+CODIGO ::= 	 STRUCT_PISTA:a CODIGO:b {:List<Node> listTrack = (List<Node>) b; listTrack.add((Node) a); RESULT = listTrack;:}
+            |COMENTARIOS CODIGO:b {:List<Node> listTrack = (List<Node>) b; RESULT = listTrack;:}
+			| {:List<Node> listTrack = new ArrayList<>(); RESULT = listTrack;:}
+			|error:e CODIGO  {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura pista");:}
+			;
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE PISTA*/
+
+STRUCT_PISTA ::= pista identificador:a EXTIENDE_STATE:b llave_a STRUCT_CODE:c llave_c {:TrackNode track = new TrackNode((String) a, (List<String>) b, (List<Node>) c, new PositionToken(aright+1, aleft+1), null); 
+RESULT = track; :}
+				|error:e identificador:a EXTIENDE_STATE:b llave_a STRUCT_CODE:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura pista, se esperava el token 'pista'");:}
+				|pista error:e EXTIENDE_STATE llave_a STRUCT_CODE llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura pista, se esperava un IDENTIFICADOR");:}
+				|pista identificador:a error:e llave_a STRUCT_CODE:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura pista, en los valores extendidos");:}
+				|pista identificador EXTIENDE_STATE llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura pista, en las sentencias de codigo");:}
+				;
+
+EXTIENDE_STATE ::=	 extiende STRUCT_EXTIENDE:a {:RESULT = (List<String>) a;:}
+					| {:List<String> list = new ArrayList<>(); RESULT = list;:}
+					|error:e STRUCT_EXTIENDE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura EXTIENDE, se esperaba una la palabra reservada 'extiende'");:};
+
+STRUCT_EXTIENDE ::=  STRUCT_EXTIENDE:a coma identificador:b {:List<String> list = (List<String>) a; list.add((String) b); RESULT = list;:}
+					|identificador:a {:List<String> list = new ArrayList<>(); list.add((String) a); RESULT = list;:}
+					|STRUCT_EXTIENDE:a error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura EXTIENDE, se esperaba una COMA ','");:}
+					|STRUCT_EXTIENDE:a coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura EXTIENDE, se esperaba un IDENTIFICADOR");:}
+					|error:e coma identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura EXTIENDE");:}
+					;
+
+STRUCT_CODE ::=	 STRUCT_CODE:a COMENTARIOS {:List<Node> instructions = (List<Node>) a; RESULT = instructions;:}
+				|STRUCT_CODE:a STRUCT_DECLARACION_VARIABLE_GLOBAL:b {:List<Node> instructions = (List<Node>) a; instructions.add((Node) b); RESULT = instructions;:}
+				|STRUCT_CODE:a STRUCT_ASIGNACION_VAR:b {:List<Node> instructions = (List<Node>) a; instructions.add((Node) b); RESULT = instructions;:}
+				|STRUCT_CODE:a STRUCT_DECLARACION_ARREGLO_GLOBAL:b {:List<Node> instructions = (List<Node>) a; instructions.add((Node) b); RESULT = instructions;:}
+				|STRUCT_CODE:a STRUCT_ASIGNACION_ARREGLO:b {:List<Node> instructions = (List<Node>) a; instructions.add((Node) b); RESULT = instructions;:}
+				|STRUCT_CODE:a STRUCT_FUNCION_PROC:b {:List<Node> instructions = (List<Node>) a; instructions.add((Node) b); RESULT = instructions;:}
+				|STRUCT_CODE:a STRUCT_METODO_PRINCIPAL:b {:List<Node> instructions = (List<Node>) a; instructions.add((Node) b); RESULT = instructions;:}
+				| {:List<Node> instructions = new ArrayList<>(); RESULT = instructions;:};
+
+STRUCT_CODE_MAIN ::= STRUCT_CODE_MAIN COMENTARIOS
+					|STRUCT_CODE_MAIN STRUCT_DECLARACION_VARIABLE_GLOBAL
+					|STRUCT_CODE_MAIN STRUCT_ASIGNACION_VAR
+					|STRUCT_CODE_MAIN STRUCT_DECLARACION_ARREGLO_GLOBAL
+					|STRUCT_CODE_MAIN STRUCT_ASIGNACION_ARREGLO
+					|STRUCT_CODE_MAIN STRUCT_FUNCION_PROC
+					| ;
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE DECLARACION DE VARIABLES Y ASIGNACION*/
+
+STRUCT_DECLARACION_VARIABLE_GLOBAL ::=	 DECLARACION_VARIABLE_GLOBAL_STATE:d ASIGNACION_STATE:a punto_coma 
+										{:ListDeclaration list = (ListDeclaration) d;
+										list.setAsignation((Node) a);
+										RESULT = list;:} 
+										|DECLARACION_VARIABLE_GLOBAL_STATE error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion en la seccion de asignacion de valor");:}
+										;
+
+DECLARACION_VARIABLE_GLOBAL_STATE ::=	 DECLARACION_VARIABLE_GLOBAL_STATE:d coma identificador:a {:ListDeclaration list = (ListDeclaration) d;
+										list.addDeclaration(new DeclarationVar(list.isKeep(), list.getDataType(), (String) a, null, new PositionToken(aright+1, aleft+1), list.getDataType()));
+										RESULT = list;:}
+										|KEEP_STATE:a var:m TIPO_DATO_STATE:b identificador:c {:ListDeclaration list = new ListDeclaration((Boolean) a, (DataType) b, new PositionToken(mright+1, mleft+1), (DataType) b);
+										list.addDeclaration(new DeclarationVar((Boolean) a, (DataType) b, (String) c, null, new PositionToken(cright+1, cleft+1), (DataType) b));
+										RESULT = list;:}
+										|KEEP_STATE:a var error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion, se esperaba un tipo de dato");:}
+										|KEEP_STATE:a var TIPO_DATO_STATE error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion se esperaba un identificador");:}
+										|DECLARACION_VARIABLE_GLOBAL_STATE coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion se esperaba un identificador");:}
+										;
+
+KEEP_STATE ::= 	 keep {:RESULT = true;:}
+				|  {:RESULT = false;:};
+
+TIPO_DATO_STATE ::=  entero {:RESULT = DataType.ENTERO;:}
+					|doble {:RESULT = DataType.DOBLE;:}
+					|boolean_rsv {:RESULT = DataType.BOOLEAN;:}
+					|cadena_rsv {:RESULT = DataType.CADENA;:}
+					|caracter_rsv {:RESULT = DataType.CARACTER;:};
+
+ASIGNACION_STATE ::=	 igual VALOR_STATE:a {:RESULT = (Node) a;:}
+						|  {:RESULT = null;:}
+						|igual error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion, se esperaba un valor");:}
+						|error:e VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba una signo '='");:}
+						;
+
+STRUCT_ASIGNACION_VAR ::=	 identificador:a igual VALOR_STATE:b punto_coma {:RESULT = new AsignationVar((String) a, (Node) b, new PositionToken(aright+1, aleft+1), null);:}
+							|identificador:a mas_igual VALOR_STATE:b punto_coma {:
+							Node nodeId = new Identifier((String) a, new PositionToken(aright+1, aleft+1), null);
+							Node nodeOp = new OperationArithmetic(ArithType.ADD, nodeId, (Node) b, new PositionToken(aright+1, aleft+1), null);
+							RESULT = new AsignationVar((String) a, nodeOp, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|identificador:a mas_mas punto_coma {:
+							Node nodeId = new Identifier((String) a, new PositionToken(aright+1, aleft+1), null);
+							Node nodeAdd = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, 1);
+							Node nodeOp = new OperationArithmetic(ArithType.ADD, nodeId, nodeAdd, new PositionToken(aright+1, aleft+1), null);
+							RESULT = new AsignationVar((String) a, nodeOp, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|identificador:a menos_menos punto_coma {:
+							Node nodeId = new Identifier((String) a, new PositionToken(aright+1, aleft+1), null);
+							Node nodeSub = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, 1);
+							Node nodeOp = new OperationArithmetic(ArithType.SUBTRAC, nodeId, nodeSub, new PositionToken(aright+1, aleft+1), null);
+							RESULT = new AsignationVar((String) a, nodeOp, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|identificador error:e VALOR_STATE punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba una signo '='");:}
+							|identificador igual error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba un valor de asignacion");:}
+							|identificador error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba una signo '(=, +=, ++, --)'");:}
+							;
+
+STRUCT_DECLARACION_VARIABLE ::=	 DECLARACION_VARIABLE_STATE:d ASIGNACION_STATE:a punto_coma 
+								{:ListDeclaration list = (ListDeclaration) d;
+								list.setAsignation((Node) a);
+								RESULT = list;:}
+								|DECLARACION_VARIABLE_STATE error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion");:}
+								|error:e ASIGNACION_STATE:a punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion");:}
+								;
+
+// DECLARACION_VARIABLE_STATE ::=	 DECLARACION_VARIABLE_STATE coma identificador ASIGNACION_STATE
+// 								|var TIPO_DATO_STATE identificador ASIGNACION_STATE;
+
+DECLARACION_VARIABLE_STATE ::=	 DECLARACION_VARIABLE_STATE:d coma identificador:a {:ListDeclaration list = (ListDeclaration) d;
+								list.addDeclaration(new DeclarationVar(list.isKeep(), list.getDataType(), (String) a, null, new PositionToken(aright+1, aleft+1), list.getDataType()));
+								RESULT = list;:}
+								|var:m TIPO_DATO_STATE:b identificador:c {:ListDeclaration list = new ListDeclaration(false, (DataType) b, new PositionToken(mright+1, mleft+1), (DataType) b);
+								list.addDeclaration(new DeclarationVar(false, (DataType) b, (String) c, null, new PositionToken(cright+1, cleft+1), (DataType) b));
+								RESULT = list;:}
+								|error:e TIPO_DATO_STATE identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion se esperaba u token 'var'");:}
+								|var error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion se esperaba un tipo de dato");:}
+								|var TIPO_DATO_STATE error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion se esperaba un identificador");:}
+								|error:e coma identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion");:}
+								|DECLARACION_VARIABLE_STATE coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion se esperaba un identificador");:}
+								;
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE DECLARACION DE ARREGLOS Y ASIGNACION*/
+
+
+STRUCT_DECLARACION_ARREGLO_GLOBAL ::=	 DECLARACION_ARREGLO_GLOBAL_STATE:d STRUCT_DIMENSION_ARREGLO:b ASIGNACION_ARREGLO_STATE:a punto_coma
+										{:ListDeclaration list = (ListDeclaration) d;
+										list.setAsignation((Node) a);
+										list.setDimensions((List<Node>) b);
+										RESULT = list;:}
+										|DECLARACION_ARREGLO_GLOBAL_STATE error:e ASIGNACION_ARREGLO_STATE punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaraion del arreglo");:}
+										|DECLARACION_ARREGLO_GLOBAL_STATE STRUCT_DIMENSION_ARREGLO error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaraion del arreglo");:}
+										;
+
+DECLARACION_ARREGLO_GLOBAL_STATE ::=	 DECLARACION_ARREGLO_GLOBAL_STATE:d coma identificador:a {:ListDeclaration list = (ListDeclaration) d;
+										list.addDeclaration(new DeclaracionArray(list.isKeep(), list.getDataType(), (String) a, null, null, new PositionToken(aright+1, aleft+1), list.getDataType()));
+										RESULT = list;:}
+										|KEEP_STATE:a var TIPO_DATO_STATE:b arreglo:m identificador:c {:ListDeclaration list = new ListDeclaration((Boolean) a, true, (DataType) b, new PositionToken(mright+1, mleft+1), (DataType) b);
+										list.addDeclaration(new DeclaracionArray((Boolean) a, (DataType) b, (String) c, null, null, new PositionToken(cright+1, cleft+1), (DataType) b));
+										RESULT = list;:}
+										|DECLARACION_ARREGLO_GLOBAL_STATE error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaraion del arreglo se esperaba una coma ','");:}
+										|DECLARACION_ARREGLO_GLOBAL_STATE coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, se esperaba un identificador");:}
+										|KEEP_STATE var TIPO_DATO_STATE error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo se esperaba su dimension");:}
+										;
+
+STRUCT_DIMENSION_ARREGLO ::=	 STRUCT_DIMENSION_ARREGLO:d corchete_a VALOR_STATE:a corchete_c {:List<Node> list = (List<Node>) d;
+								list.add((Node) a);
+								RESULT = list;:}
+								|STRUCT_DIMENSION_ARREGLO:d corchete_a corchete_c {:List<Node> list = (List<Node>) d;
+								list.add(null);
+								RESULT = list;:}
+								|corchete_a VALOR_STATE:a corchete_c {:List<Node> list = new ArrayList<>();
+								list.add((Node) a);
+								RESULT = list;:}
+								|corchete_a corchete_c {:List<Node> list = new ArrayList<>();
+								list.add(null);
+								RESULT = list;:}
+								|corchete_a error:e corchete_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion de dimension del arreglo");:}
+								|error:e corchete_a corchete_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion de dimension del arreglo");:}
+								|STRUCT_DIMENSION_ARREGLO:e corchete_a error corchete_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion de dimension del arreglo");:}
+								;
+
+ASIGNACION_ARREGLO_STATE ::=	 igual VALOR_ARREGLO_STATE:a {:RESULT = a;:}
+								| {:RESULT = null;:}
+								|error:e VALOR_ARREGLO_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba un singno igual '='");:}
+								|igual error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperava un valor para el arreglo");:}
+								;
+
+
+/*
+casos
+1. {1,2,3}
+2. {{1,2,3}, {1,2,3}, {1,2,3}}
+3. {{{1,2,3}, {1,2,3}, {1,2,3}}, {{1,2,3}, {1,2,3}, {1,2,3}}, {{1,2,3}, {1,2,3}, {1,2,3}}}
+
+
+|VALOR_ARREGLO_STATE coma llave_a llave_c
+
+*/
+
+VALOR_ARREGLO_STATE ::=  llave_a:m VALOR_ARREGLO_MULTI_STATE:a llave_c {:RESULT = new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1));:}
+						|llave_a:m VALOR_UNIT_ARREGLO:a llave_c {:RESULT = new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1));:}
+						|llave_a:m llave_c {:RESULT = new DataArreglo(new ArrayList<>(), new PositionToken(mright+1, mleft+1));:}
+						|llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
+						;
+
+VALOR_ARREGLO_MULTI_STATE ::=	 VALOR_ARREGLO_MULTI_STATE:d coma llave_a:m VALOR_ARREGLO_MULTI_STATE:a llave_c {:List<Node> list = (List<Node>) d;
+								list.add(new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1)));
+								RESULT = list;:}
+								|VALOR_ARREGLO_MULTI_STATE:d coma llave_a:m VALOR_UNIT_ARREGLO:a llave_c {:List<Node> list = (List<Node>) d;
+								list.add(new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1)));
+								RESULT = list;:}
+								|llave_a:m VALOR_ARREGLO_MULTI_STATE:a llave_c {:List<Node> list = new ArrayList<>();
+								list.add(new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1)));
+								RESULT = list;:}
+								|llave_a:m VALOR_UNIT_ARREGLO:a llave_c {:List<Node> list = new ArrayList<>();
+								list.add(new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1)));
+								RESULT = list;:}
+								|VALOR_ARREGLO_MULTI_STATE coma llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
+								|VALOR_ARREGLO_MULTI_STATE error:e llave_a VALOR_ARREGLO_MULTI_STATE llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");:}
+								|VALOR_ARREGLO_MULTI_STATE error:e llave_a VALOR_UNIT_ARREGLO llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");:}
+								|llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
+								;
+
+VALOR_UNIT_ARREGLO ::= 	 VALOR_UNIT_ARREGLO:d coma VALOR_STATE:a {:List<Node> list = (List<Node>) d;
+						list.add((Node) a);
+						RESULT = list;:}
+						|VALOR_STATE:a {:List<Node> list = new ArrayList<>();
+						list.add((Node) a);
+						RESULT = list;:} 
+						|VALOR_UNIT_ARREGLO coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperaba un valor");:}
+						|error:e coma VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
+						;
+
+
+STRUCT_ASIGNACION_ARREGLO ::=	 identificador:a DIMESION_POS_ARREGLO:b igual VALOR_STATE:c punto_coma 
+								{:RESULT = new AsignationArray((String) a,( List<Node>) b, (Node) c, new PositionToken(aright+1, aleft+1), null);:}
+								|identificador:a error:e igual VALOR_STATE:c punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion del arreglo; en la dimension");:}
+								|identificador:a DIMESION_POS_ARREGLO:b error:e VALOR_STATE:c punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion del arreglo, se esperaba un igual '='");:}
+								|identificador:a DIMESION_POS_ARREGLO:b igual error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion del arreglo, se esperaba un valor");:}
+								;
+
+
+DIMESION_POS_ARREGLO ::= DIMESION_POS_ARREGLO:d corchete_a VALOR_STATE:a corchete_c {:List<Node> list = (List<Node>) d;
+						list.add((Node) a);
+						RESULT = list;:}
+						|corchete_a VALOR_STATE:a corchete_c {:List<Node> list = new ArrayList<>();
+						list.add((Node) a);
+						RESULT = list;:}
+						|DIMESION_POS_ARREGLO corchete_a error:e corchete_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la dimension del arreglo, se esperaba un valor");:}
+						|corchete_a error:e corchete_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la dimension del arreglo, se esperaba un valor");:}
+						;
+
+
+STRUCT_DECLARACION_ARREGLO ::=	 DECLARACION_ARREGLO_STATE:d STRUCT_DIMENSION_ARREGLO:b ASIGNACION_ARREGLO_STATE:a punto_coma
+								{:ListDeclaration list = (ListDeclaration) d;
+								list.setAsignation((Node) a);
+								list.setDimensions((List<Node>) b);
+								RESULT = list;:}
+								|error:e STRUCT_DIMENSION_ARREGLO ASIGNACION_ARREGLO_STATE punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo");:}
+								|DECLARACION_ARREGLO_STATE error:e ASIGNACION_ARREGLO_STATE punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, en la dimension");:}
+								|DECLARACION_ARREGLO_STATE STRUCT_DIMENSION_ARREGLO error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, en la asignacion");:}
+								;
+
+DECLARACION_ARREGLO_STATE ::=	 DECLARACION_ARREGLO_STATE:d coma identificador:a {:ListDeclaration list = (ListDeclaration) d;
+								list.addDeclaration(new DeclaracionArray(list.isKeep(), list.getDataType(), (String) a, null, null, new PositionToken(aright+1, aleft+1), list.getDataType()));
+								RESULT = list;:}
+								// |var TIPO_DATO_STATE arreglo identificador STRUCT_DIMENSION_ARREGLO igual VALOR_ARREGLO_STATE
+								// |var TIPO_DATO_STATE arreglo identificador STRUCT_DIMENSION_ARREGLO 
+								|var:m TIPO_DATO_STATE:b arreglo identificador:c {:ListDeclaration list = new ListDeclaration(false, true, (DataType) b, new PositionToken(mright+1, mleft+1), (DataType) b);
+								list.addDeclaration(new DeclaracionArray(false, (DataType) b, (String) c, null, null, new PositionToken(cright+1, cleft+1), (DataType) b));
+								RESULT = list;:}
+								|DECLARACION_ARREGLO_STATE error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, se esperaba una COMA ','");:}
+								|DECLARACION_ARREGLO_STATE coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, se esperaba un identificador");:}
+								|var error:e arreglo identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, se esperaba un tipo de dato");:}
+								|var TIPO_DATO_STATE error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, se esperaba la palabra reservada 'arreglo'");:}
+								|var TIPO_DATO_STATE arreglo error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la declaracion del arreglo, se esperaba un identificador");:}
+								;
+
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE CONDICIONAL SI - SINO SI - SINO*/
+
+CONDICIONAL_SI_SINO_SI ::=	 CONDICIONAL_SI_SINO_SI_STATE:a STRUCT_CONDICIONAL_SINO:b {:ConditionalSi conditionalSi = (ConditionalSi) a;
+							conditionalSi.setConditionalSino((Node) b);
+							RESULT = conditionalSi; :}
+							|CONDICIONAL_SI_SINO_SI_STATE:a {:RESULT = a;:}
+							|error:e STRUCT_CONDICIONAL_SINO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SI o SINO_SI");:}
+							;
+
+CONDICIONAL_SI_SINO_SI_STATE ::= CONDICIONAL_SI_SINO_SI_STATE:a STRUCT_CONDICIONAL_SINO_SI:b {:ConditionalSi conditionalSi = (ConditionalSi) a;
+								conditionalSi.addConditionalSinoSi((Node) b);
+								RESULT = conditionalSi; :}
+								|STRUCT_CONDICIONAL_SI:a {:RESULT = a;:}
+								|error:e STRUCT_CONDICIONAL_SINO_SI {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SI o SINO_SI");:}
+								;
+
+
+STRUCT_CONDICIONAL_SI ::= si:m pa_a VALOR_CODICIONAL:a pa_c llave_a SENTENCIAS_CODIGO:b llave_c {: RESULT = new ConditionalSi((Node) a, (List<Node>) b, new PositionToken(mright+1, mleft+1));:}
+						|si pa_a error:e pa_c llave_a SENTENCIAS_CODIGO llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SI, se esperaba in valor condicional");:}
+						|si pa_a VALOR_CODICIONAL pa_c error:e SENTENCIAS_CODIGO llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SI se esperaban llaves '{'");:}
+						;
+
+STRUCT_CONDICIONAL_SINO_SI ::= sino_si:m pa_a VALOR_CODICIONAL:a pa_c llave_a SENTENCIAS_CODIGO:b llave_c {:RESULT = new ConditionalSinoSi((Node) a, (List<Node>) b, new PositionToken(mright+1, mleft+1));:}
+							|sino_si pa_a error:e pa_c llave_a SENTENCIAS_CODIGO:b llave_c  {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SINO_SI, se esperaba in valor condicional");:}
+							|sino_si pa_a VALOR_CODICIONAL pa_c error:e SENTENCIAS_CODIGO:b llave_c  {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SINO_SI, se esperaba in valor condicional");:}
+							;
+
+STRUCT_CONDICIONAL_SINO ::= sino:m llave_a SENTENCIAS_CODIGO:a llave_c {:RESULT = new ConditionalSino((List<Node>) a, new PositionToken(mright+1, mleft+1));:}
+							|sino:m error:e SENTENCIAS_CODIGO:a llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SINO, se esperaba in valor condicional");:}
+							;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE CONDICIONAL SWITCH*/
+
+STRUCT_CONDICIONAL_SWITCH ::=	switch_rsv:m pa_a VALOR_STATE:a pa_c llave_a CASO_STATE:b llave_c
+								{:RESULT = new ConditionalSwitch((Node) a, (List<Node>) b, null, new PositionToken(mright+1, mleft+1));:}
+								|switch_rsv pa_a error:e pa_c llave_a CASO_STATE llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SWITCH, en valor de la condicion");:}
+								|switch_rsv pa_a VALOR_STATE pa_c llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en las condicional SWITCH, en los CASOS");:}
+								;
+
+CASO_STATE ::=	 STRUCT_CASO default_rsv:m dos_puntos SENTENCIAS_CODIGO:a {:List<Node> list = (List<Node>) a; 
+				list.add(new NodeDefault((List<Node>) a, new PositionToken(mright+1, mleft+1)));
+				RESULT = (List<Node>) list;:}
+				|STRUCT_CASO:a {:List<Node> list = (List<Node>) a; RESULT = (List<Node>) list;:}
+				|STRUCT_CASO default_rsv error:e SENTENCIAS_CODIGO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra del caso default, se esperaba dos puntos ':'");:}
+				;
+
+
+STRUCT_CASO ::=  STRUCT_CASO:c caso:m VALOR_CASO:a dos_puntos SENTENCIAS_CODIGO_CASO:b {:List<Node> list = (List<Node>) c;
+				list.add(new ConditionalCase((Node) a, (List<Node>) b, new PositionToken(mright+1, mleft+1)));
+				RESULT = (List<Node>) list; :}
+				|caso:m VALOR_CASO:a dos_puntos SENTENCIAS_CODIGO_CASO:b {:List<Node> list = new ArrayList<>();
+					list.add(new ConditionalCase((Node) a, (List<Node>) b, new PositionToken(mright+1, mleft+1)));
+					RESULT = (List<Node>) list;:}
+				|error:e caso VALOR_CASO dos_puntos SENTENCIAS_CODIGO_CASO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra del caso del switch");:}
+				|STRUCT_CASO caso error:e dos_puntos SENTENCIAS_CODIGO_CASO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra del caso del switch, se esperaba un valor primitivo");:}
+				|STRUCT_CASO caso VALOR_CASO error:e SENTENCIAS_CODIGO_CASO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra del caso del switch, se esperaban dos puntos ':'");:}
+				|caso error:e dos_puntos SENTENCIAS_CODIGO_CASO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra del caso del switch, se esperaba un valor primitivo");:}
+				|caso VALOR_CASO error:e SENTENCIAS_CODIGO_CASO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra del caso del switch, se esperaban dos puntos ':'");:}
+				;
+
+VALOR_CASO ::= 	 numero:a {:RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, a);:}
+				|cadena:a {:RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, a);:}
+				|caracter:a {:RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, a);:}
+				|decimal:a {:RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, a);:};
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE CONDICIONAL PARA*/
+
+STRUCT_PARA ::=	 para:m pa_a ASIG_PARA_STATE:a punto_coma COND_PARA_STATE:b punto_coma SENTENCIAS_PARA_STATE:c pa_c llave_a SENTENCIAS_CODIGO:d llave_c
+				{:RESULT = new ConditionalPara((Node) a, (Node) b, (Node) c, (List<Node>) d, new PositionToken(mright+1, mleft+1));:}
+				|para pa_a error:e punto_coma COND_PARA_STATE punto_coma SENTENCIAS_PARA_STATE pa_c llave_a SENTENCIAS_CODIGO llave_c
+				{:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asignacion");:}
+				|para pa_a ASIG_PARA_STATE punto_coma error:e punto_coma SENTENCIAS_PARA_STATE pa_c llave_a SENTENCIAS_CODIGO llave_c
+				{:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la condicional");:}
+				|para pa_a ASIG_PARA_STATE punto_coma COND_PARA_STATE punto_coma error:e pa_c llave_a SENTENCIAS_CODIGO llave_c
+				{:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la sentencia de incremento");:}
+				;
+
+
+ASIG_PARA_STATE ::=	 var:m TIPO_DATO_STATE:c identificador:a igual VALOR_STATE:b {: RESULT = new DeclarationVar(false, (DataType) c, (String) a, (Node) b, new PositionToken(mright+1, mleft+1), (DataType) c); :}
+					|identificador:a igual VALOR_STATE:b {:RESULT = new AsignationVar((String) a, (Node) b, new PositionToken(aright+1, aleft+1), null);:}
+					|var:m error:e identificador:a igual VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un tipo de dato");:}
+					|var:m TIPO_DATO_STATE:c error:e igual VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un identificador");:}
+					|var:m TIPO_DATO_STATE:c identificador:a error:e VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un igual '='");:}
+					|var:m TIPO_DATO_STATE:c identificador:a igual error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un valor");:}
+					|error:e igual VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un identificador");:}
+					|identificador error:e VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un signo igual '='");:}
+					|identificador:a igual error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrucutra de la condiciona Para, en la asinganacion, se esperaba un valor");:}
+					;
+
+COND_PARA_STATE ::=	 VALOR_CODICIONAL:a {:RESULT = a;:};
+
+SENTENCIAS_PARA_STATE ::=	 identificador:a igual VALOR_STATE:b {:RESULT = new AsignationVar((String) a, (Node) b, new PositionToken(aright+1, aleft+1), null);:}
+							|identificador:a mas_igual VALOR_STATE:b {:
+							Node nodeId = new Identifier((String) a, new PositionToken(aright+1, aleft+1), null);
+							Node nodeOp = new OperationArithmetic(ArithType.ADD, nodeId, (Node) b, new PositionToken(aright+1, aleft+1), null);
+							RESULT = new AsignationVar((String) a, nodeOp, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|identificador:a mas_mas {:
+							Node nodeId = new Identifier((String) a, new PositionToken(aright+1, aleft+1), null);
+							Node nodeAdd = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, 1);
+							Node nodeOp = new OperationArithmetic(ArithType.ADD, nodeId, nodeAdd, new PositionToken(aright+1, aleft+1), null);
+							RESULT = new AsignationVar((String) a, nodeOp, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|identificador:a menos_menos {:
+							Node nodeId = new Identifier((String) a, new PositionToken(aright+1, aleft+1), null);
+							Node nodeSub = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, 1);
+							Node nodeOp = new OperationArithmetic(ArithType.SUBTRAC, nodeId, nodeSub, new PositionToken(aright+1, aleft+1), null);
+							RESULT = new AsignationVar((String) a, nodeOp, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|error:e igual VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba un identificador");:}
+							|identificador:a error:e VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba una signo '='");:}
+							|identificador:a igual error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba un valor");:}
+							|identificador error:e VALOR_STATE punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba una signo '='");:}
+							|identificador igual error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba un valor de asignacion");:}
+							|identificador error:e punto_coma {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la asignacion se esperaba una signo '(=, +=, ++, --)'");:}
+							;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE CONDICIONAL MIENTRAS - HACER MIENTRAS*/
+
+STRUCT_MIENTRAS ::= mientras:m pa_a VALOR_CODICIONAL:a pa_c llave_a SENTENCIAS_CODIGO:b llave_c {:RESULT = new ConditionalMientras((Node) a, (List<Node>) b, new PositionToken(mright+1, mleft+1));:}
+					|mientras pa_a error:e pa_c llave_a SENTENCIAS_CODIGO llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la condicional Mientras, se esperaba el valor condicional");:}
+					|mientras pa_a VALOR_CODICIONAL pa_c error:e SENTENCIAS_CODIGO llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la condicional Mientras, se esperaba la apertura de llaves '{'");:}
+					;
+
+
+STRUCT_HACER_MIENTRAS ::= hacer:m llave_a SENTENCIAS_CODIGO:b llave_c mientras pa_a VALOR_CODICIONAL:a pa_c {:RESULT = new ConditionalHacerMientras((List<Node>) b, (Node) a, new PositionToken(mright+1, mleft+1));:}
+						|hacer:m llave_a SENTENCIAS_CODIGO:b llave_c mientras pa_a error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la condicional Hacer Mientras, se esperaba el valor condicional");:}
+						|hacer:m llave_a SENTENCIAS_CODIGO:b llave_c error:e pa_a VALOR_CODICIONAL:a pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la condicional Hacer Mientras, se esperaba la palabra reservada 'Mientras'");:}
+						;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE FUNCIONES Y PROCEDIMIENTOS*/
+
+STRUCT_FUNCION_PROC ::=  identificador:a pa_a STRUCT_PARAMS_STATE:b pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c 
+						{:RESULT = new FunctionProc(false, false, (String) a, (List<Node>) b, (List<Node>) c, new PositionToken(aright+1, aleft+1), DataType.VOID);:}
+						|TIPO_DATO_STATE_OPTIONAL:d identificador:a pa_a STRUCT_PARAMS_STATE:b pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c
+						{:RESULT = new FunctionProc(false, true, (String) a, (List<Node>) b, (List<Node>) c, new PositionToken(aright+1, aleft+1), (DataType) d);:}
+						|keep identificador:a pa_a STRUCT_PARAMS_STATE:b pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c
+						{:RESULT = new FunctionProc(true, false, (String) a, (List<Node>) b, (List<Node>) c, new PositionToken(aright+1, aleft+1), DataType.VOID);:}
+						|keep TIPO_DATO_STATE_OPTIONAL:d identificador:a pa_a STRUCT_PARAMS_STATE:b pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c
+						{:RESULT = new FunctionProc(true, true, (String) a, (List<Node>) b, (List<Node>) c, new PositionToken(aright+1, aleft+1), (DataType) d);:}
+						|identificador:a pa_a error:e pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. en la seccion de parametros'");:}
+						|identificador:a pa_a STRUCT_PARAMS_STATE:b pa_c error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. en la seccion de sentencias'");:}
+						|TIPO_DATO_STATE_OPTIONAL:d error:e pa_a STRUCT_PARAMS_STATE:b pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. se esperaba un identificador'");:}
+						|TIPO_DATO_STATE_OPTIONAL:d identificador:a pa_a error:e pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. en la seccion de parametros'");:}
+						|keep identificador:a pa_a error:e pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. en la seccion de parametros'");:}
+						|keep TIPO_DATO_STATE_OPTIONAL:d error:e pa_a STRUCT_PARAMS_STATE:b pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. se esperaba un identificador'");:}
+						|keep TIPO_DATO_STATE_OPTIONAL:d identificador:a pa_a error:e pa_c llave_a SENTENCIAS_CODIGO_FUNC_PROC:c llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de la funcion o metodo. en la seccion de parametros'");:}
+						;
+
+TIPO_DATO_STATE_OPTIONAL ::= entero {:RESULT = DataType.ENTERO;:}
+							|doble {:RESULT = DataType.DOBLE;:}
+							|boolean_rsv {:RESULT = DataType.BOOLEAN;:}
+							|cadena_rsv {:RESULT = DataType.CADENA;:}
+							|caracter_rsv {:RESULT = DataType.CARACTER;:}
+							|void_rsv {:RESULT = DataType.VOID;:}; 
+
+STRUCT_PARAMS_STATE ::=	 STRUCT_PARAMS:a {:RESULT = a;:}
+						| {:List<Node> list = new ArrayList<>(); RESULT = (List<Node>) list;:};
+
+STRUCT_PARAMS ::=	 STRUCT_PARAMS:a coma TIPO_DATO_STATE:b identificador:c {:List<Node> list = (List<Node>) a;
+					list.add(new DeclarationVar(false, (DataType) b, (String) c, null, new PositionToken(bright+1, bleft+1), (DataType) b));
+					RESULT = (List<Node>) list;:}
+					|TIPO_DATO_STATE:a identificador:b {:List<Node> list = new ArrayList<>();
+					list.add(new DeclarationVar(false, (DataType) a, (String) b, null, new PositionToken(aright+1, aleft+1), (DataType) a));
+					RESULT = (List<Node>) list;:}
+					|error:e coma TIPO_DATO_STATE:b identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de los parametros'");:}
+					|STRUCT_PARAMS:a coma error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de los parametros, se esperaba un tipo de dato'");:}
+					|STRUCT_PARAMS:a coma TIPO_DATO_STATE:b error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de los parametros, se esperaba un identificador'");:}
+					|error:e identificador {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de los parametros, se esperaba un tipo de dato'");:}
+					|TIPO_DATO_STATE error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura de los parametros, se esperaba un identificador'");:}
+					;
+
+
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE REPRODUCIR*/
+
+STRUCT_REPRODUCIR ::=	 reproducir:e pa_a NOTA_STATE:a coma OCTAVA_STATE:b coma TIEMPO_MS_STATE:c coma CANAL_STATE:d pa_c 
+						{:RESULT = new InstReproducir((MusicalNotes) a, (Node) b, (Node) c, (Node) d, new PositionToken(eright+1, eleft+1));:}
+						|reproducir pa_a error:e coma OCTAVA_STATE coma TIEMPO_MS_STATE coma CANAL_STATE pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura reproducir, en la seccion de notas'");:}
+						|reproducir pa_a NOTA_STATE coma error:e coma TIEMPO_MS_STATE coma CANAL_STATE pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura reproducir, en la seccion de octavas'");:}
+						|reproducir pa_a NOTA_STATE coma OCTAVA_STATE coma error:e coma CANAL_STATE pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura reproducir, en la seccion de tiempo'");:}
+						|reproducir pa_a NOTA_STATE coma OCTAVA_STATE coma TIEMPO_MS_STATE coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura reproducir, en la seccion de canal'");:}
+						;
+
+NOTA_STATE ::=	 do_rsv {:RESULT = MusicalNotes.C;:}
+				|do_s {:RESULT = MusicalNotes.C_S;:}
+				|re {:RESULT = MusicalNotes.D;:}
+				|re_s {:RESULT = MusicalNotes.D_S;:}
+				|mi {:RESULT = MusicalNotes.E;:}
+				|fa {:RESULT = MusicalNotes.F;:}
+				|fa_s {:RESULT = MusicalNotes.F_S;:}
+				|sol {:RESULT = MusicalNotes.G;:}
+				|sol_s {:RESULT = MusicalNotes.G_S;:}
+				|la {:RESULT = MusicalNotes.A;:}
+				|la_s {:RESULT = MusicalNotes.A_S;:}
+				|si {:RESULT = MusicalNotes.B;:};
+
+OCTAVA_STATE ::= VALOR_STATE:a {:RESULT = a;:};
+
+TIEMPO_MS_STATE ::= VALOR_STATE:a {:RESULT = a;:};
+
+CANAL_STATE ::= VALOR_STATE:a {:RESULT = a;:};
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE ESPERAR*/
+
+STRUCT_ESPERAR ::= esperar pa_a VALOR_STATE:a coma VALOR_STATE:b pa_c {:RESULT = new InstEsperar((Node) a, (Node) b, new PositionToken(aright+1, aleft+1));:}
+					|esperar pa_a error:e coma VALOR_STATE pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura esperar, en la seccion de tiempo'");:}
+					|esperar pa_a VALOR_STATE:a coma error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura esperar, en la seccion de canal'");:}
+					;
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE ORDENAR*/ /* *********************************************************************** Pendientes Todo el Nodo Tipo*/
+
+STRUCT_ORDENAR ::= 	 ordenar pa_a VALOR_ORDENAR_STATE:a pa_c {:RESULT = (Node) a;:}
+					|ordenar pa_a error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura ordenar, en el parametro'");:}
+					;
+
+/*RECIBE UN ARREGLO Y EL TIPO DE ORDEN*/
+VALOR_ORDENAR_STATE ::=	 identificador:a coma TIPO_ORDEN:b {:RESULT = new InstOrdenar(new Identifier((String) a, new PositionToken(aright+1, aleft+1), null), (OrderType) b, new PositionToken(aright+1, aleft+1));:}
+						|VALOR_ARREGLO_STATE:a coma TIPO_ORDEN:b {:RESULT = new InstOrdenar((Node) a, (OrderType) b, new PositionToken(aright+1, aleft+1));:}
+						|error:e coma TIPO_ORDEN {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura ordenar, se esperaba un identificador, arreglo'");:}
+						|identificador coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura ordenar, se esperaba un tipo de orden'");:}
+						|VALOR_ARREGLO_STATE error:e TIPO_ORDEN {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura ordenar, se esperaba una coma ',''");:}
+						|VALOR_ARREGLO_STATE coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura ordenar, se esperaba un tipo de orden'");:}
+						;
+
+TIPO_ORDEN ::=	 ascendente {:RESULT = OrderType.ASCENDENTE ;:}
+				|descendente {:RESULT = OrderType.DESCENDENTE ;:}
+				|pares {:RESULT = OrderType.PARES ;:}
+				|impares {:RESULT = OrderType.IMPARES ;:}
+				|primos {:RESULT = OrderType.PRIMOS ;:};
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE SUMARIZAR*/ /* *********************************************************************** Pendientes Uno*/
+
+/*RECIBE UN ARREGLO PUEDE SER {1,7,4} O IDENTIFICADOR*/
+STRUCT_SUMARIZAR ::= sumarizar:b pa_a identificador:a pa_c {:RESULT = new InstSumarizar(new Identifier((String) a, new PositionToken(aright+1, aleft+1), null), new PositionToken(bright+1, bleft+1));:}
+					|sumarizar:b pa_a VALOR_ARREGLO_STATE:a pa_c {:RESULT = new InstSumarizar((Node) a, new PositionToken(bright+1, bleft+1));:}
+					|sumarizar pa_a error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura Sumarizar, se esperaba un identificador, arreglo'");:}
+					;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE LONGITUD*/ /* *********************************************************************** Pendientes Uno*/
+
+/*RECIBE UN ARREGLO PUEDE SER {1,7,4} O IDENTIFICADOR/CADENA*/
+STRUCT_LONGITUD ::=  longitud:b pa_a identificador:a pa_c {:RESULT = new InstLongitud(new Identifier((String) a, new PositionToken(aright+1, aleft+1), null), new PositionToken(bright+1, bleft+1));:}
+					|longitud:b pa_a VALOR_ARREGLO_STATE:a pa_c {:RESULT = new InstLongitud((Node) a, new PositionToken(bright+1, bleft+1));:}
+					|longitud:b pa_a cadena:a pa_c {:RESULT = new InstLongitud(new Primitive(new PositionToken(aright+1, aleft+1), DataType.CADENA, (String) a), new PositionToken(bright+1, bleft+1));:}
+					|longitud pa_a error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura Longitud, se esperaba un identificador, arreglo o cadena'");:}
+					;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE MENSAJE*/
+
+STRUCT_MENSAJE ::= 	 mensaje:b pa_a VALOR_STATE:a pa_c {:RESULT = new InstMensaje((Node) a, new PositionToken(bright+1, bleft+1));:}
+					|mensaje:b pa_a error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura Mensaje, se esperaba un valor'");:}
+					;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE METODO PRINCIPAL*/
+
+STRUCT_METODO_PRINCIPAL ::= principal:b pa_a pa_c llave_a SENTENCIAS_CODIGO:a llave_c {:RESULT = new Principal((List<Node>) a, new PositionToken(bright+1, bleft+1));:}
+							|principal:b error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura Principal'");:}
+							|principal:b error:e llave_a SENTENCIAS_CODIGO:a llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura Principal, se esperava ()'");:}
+							;
+
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE OPERACIONES ARITMETICAS*/
+
+VALOR_DATA ::= 	 numero:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, a); :}
+				|decimal:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.DOBLE, a); :}
+				|true_rsv:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.BOOLEAN, a); :}
+				|false_rsv:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.BOOLEAN, a); :}
+				|caracter:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, a); :}
+				|cadena:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CADENA, a); :}
+				|identificador:a {: RESULT = new Identifier((String) a,new PositionToken(aright+1, aleft+1), DataType.IDENTIFICADOR); :}
+				|caracter_special_comilla_simple:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_COMILLA_SIMPLE, a); :}
+				|caracter_special_hashtag:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_HASHTAG, a); :}
+				|caracter_special_r:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_R, a); :}
+				|caracter_special_t:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_T, a); :}
+				|caracter_special_n:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_N, a); :}
+				|STRUCT_LLAMADA_FUNCION:a {: RESULT = a; :}
+				|STRUCT_LLAMADA_ARREGLO:a {: RESULT = a; :}
+				|STRUCT_REPRODUCIR:a {: RESULT = a; :}
+				|STRUCT_ORDENAR:a {: RESULT = a; :}
+				|STRUCT_SUMARIZAR:a {: RESULT = a; :}
+				|STRUCT_LONGITUD:a {: RESULT = a; :}
+				// |error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor de dato primitivo");:}
+				;
+
+STRUCT_LLAMADA_FUNCION ::= 	 identificador:a pa_a PARAMAS_STATE_LLAMADA:b pa_c  {: RESULT = new CallFunction((String) a, (List<Node>) b, new PositionToken(aright+1, aleft+1), null); :}
+							|identificador:a pa_a pa_c {: RESULT = new CallFunction((String) a, null, new PositionToken(aright+1, aleft+1), null); :} 
+							|identificador:a pa_a error:e pa_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en los parametros de la llamada a la funcion"+ (String) a);:};
+
+PARAMAS_STATE_LLAMADA ::=	 PARAMAS_STATE_LLAMADA:a coma VALOR_STATE:b {:
+								List<Node> params = (List<Node>) a;
+								params.add((Node) b);
+								RESULT = params;
+							:}
+							|VALOR_STATE:a {: 
+								List<Node> params = new ArrayList<>();
+								params.add((Node) a);
+								RESULT = params;
+							:}
+							|error:e coma VALOR_STATE {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en los parametros de la llamada a la funcion");:}
+							|PARAMAS_STATE_LLAMADA:a coma error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en los parametros de la llamada a la funcion se esperaba una VALOR");:}
+							;
+
+STRUCT_LLAMADA_ARREGLO ::= 	identificador:a DIMESION_POS_ARREGLO:b {:
+								RESULT = new CallArreglo((String) a, (List<Node>) b, new PositionToken(aright+1, aleft+1), null);
+							:}
+							|identificador:a error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la dimension del arreglo"+ (String) a);:}
+							|error:e DIMESION_POS_ARREGLO {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la llamada a un arreglo; se esperaba una ID");:}
+							;
+
+
+OPERACION_ARITMETICA ::= OPERACION_ARITMETICA:a mas:c OPERACION_ARITMETICA:b {: RESULT = new OperationArithmetic(ArithType.ADD, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|OPERACION_ARITMETICA:a menos:c OPERACION_ARITMETICA:b {: RESULT = new OperationArithmetic(ArithType.SUBTRAC, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null); :}
+						|OPERACION_ARITMETICA:a por:c OPERACION_ARITMETICA:b {: RESULT = new OperationArithmetic(ArithType.MULTI, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null); :}
+						|OPERACION_ARITMETICA:a div:c OPERACION_ARITMETICA:b {: RESULT = new OperationArithmetic(ArithType.DIV, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null); :}
+						|OPERACION_ARITMETICA:a modulo:c OPERACION_ARITMETICA:b {: RESULT = new OperationArithmetic(ArithType.MOD, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null); :}
+						|OPERACION_ARITMETICA:a potencia:c OPERACION_ARITMETICA:b {: RESULT = new OperationArithmetic(ArithType.POW, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null); :}
+						|pa_a OPERACION_ARITMETICA:a pa_c {: RESULT = a; :}
+						|VALOR_DATA:a {: RESULT = a; :} 
+						|pa_a error:e pa_c  {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la OPERACION");:}
+						|error:e OPERACION_ARITMETICA  {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la OPERACION, se esperaba una VALOR");:}
+						;
+
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE OPERACIONES RACIONALES*/
+
+OPERACION_RACIONAL ::=	 OPERACION_RACIONAL:a igual_igual:c OPERACION_RACIONAL:b {: RESULT = new OperationRational(RationalTypes.EQUAL, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|OPERACION_RACIONAL:a diferente:c OPERACION_RACIONAL:b {: RESULT = new OperationRational(RationalTypes.NOT_EQUAL, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|OPERACION_RACIONAL:a mayor_q:c OPERACION_RACIONAL:b {: RESULT = new OperationRational(RationalTypes.GRATE_THAN, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|OPERACION_RACIONAL:a menor_q:c OPERACION_RACIONAL:b {: RESULT = new OperationRational(RationalTypes.LESS_THAN, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|OPERACION_RACIONAL:a mayor_igual:c OPERACION_RACIONAL:b {: RESULT = new OperationRational(RationalTypes.GRATE_THAN_EQUAL, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|OPERACION_RACIONAL:a menor_igual:c OPERACION_RACIONAL:b {: RESULT = new OperationRational(RationalTypes.LESS_THAN_EQUAL, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+						|is_null OPERACION_RACIONAL:a {: RESULT = new OperationRational(RationalTypes.IS_NULL, (Node) a, null, new PositionToken(aright+1, aleft+1), null);  :}
+						// |pa_a OPERACION_RACIONAL:a pa_c
+						|OPERACION_ARITMETICA:a {: RESULT = a; :} 
+						|is_null error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la OPERACION RACIONAL, se esperaba una VALOR o Una Operacion Racional");:}
+						;
+
+/*------------------------------------------------------------------------------ESTRUCTURA DE OPERACIONES LOGICAS*/
+
+OPERACION_LOGICA ::= OPERACION_LOGICA:a and:c OPERACION_LOGICA:b {: RESULT = new OperationLogical(LogicalTypes.AND, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+					|OPERACION_LOGICA:a nand:c OPERACION_LOGICA:b {: RESULT = new OperationLogical(LogicalTypes.NAND, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+					|OPERACION_LOGICA:a or:c OPERACION_LOGICA:b {: RESULT = new OperationLogical(LogicalTypes.OR, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+					|OPERACION_LOGICA:a nor:c OPERACION_LOGICA:b {: RESULT = new OperationLogical(LogicalTypes.NOR, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+					|OPERACION_LOGICA:a xor:c OPERACION_LOGICA:b {: RESULT = new OperationLogical(LogicalTypes.XOR, (Node) a, (Node) b, new PositionToken(cright+1, cleft+1), null);  :}
+					|not OPERACION_LOGICA:a {: RESULT = new OperationLogical(LogicalTypes.NOT, (Node) a, null, new PositionToken(aright+1, aleft+1), null);  :}
+					// |pa_a OPERACION_LOGICA:a pa_c
+					|not error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la OPERACION LOGICA, se esperaba una VALOR RACIONAL");:}
+					|OPERACION_RACIONAL:a {: RESULT = a; :} ;
+
+/*------------------------------------------------------------------------------LLAMADA A UN VALOR LOGICO, OPERACIONAL, RACIONAL*/
+
+
+VALOR_STATE ::= OPERACION_LOGICA:a {: RESULT = a; :}
+				// |VALOR_ARREGLO_STATE
+				;
+
+VALOR_CODICIONAL ::= OPERACION_LOGICA:a {: RESULT = a; :};
+
+SENTENCIAS_CODIGO ::=	 SENTENCIAS_CODIGO:d COMENTARIOS {:List<Node> sentences = (List<Node>) d; RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_DECLARACION_VARIABLE:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_ASIGNACION_VAR:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_DECLARACION_ARREGLO:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_ASIGNACION_ARREGLO:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d CONDICIONAL_SI_SINO_SI:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_CONDICIONAL_SWITCH:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_PARA:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_MIENTRAS:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_HACER_MIENTRAS:b {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_REPRODUCIR:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_ESPERAR:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_ORDENAR:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_SUMARIZAR:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_LONGITUD:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_MENSAJE:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_LLAMADA_FUNCION:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d STRUCT_RETORNAR:b punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add((Node) b); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d salir:a punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add(new NodeFinally(NodeEndType.SALIR, null, new PositionToken(aright+1, aleft+1), null)); RESULT = sentences; :}
+						|SENTENCIAS_CODIGO:d continuar:a punto_coma {:List<Node> sentences = (List<Node>) d; sentences.add(new NodeFinally(NodeEndType.CONTINUAR, null, new PositionToken(aright+1, aleft+1), null)); RESULT = sentences; :}
+						| {:List<Node> sentences = new ArrayList<>(); RESULT = sentences; :}
+						;
+
+STRUCT_RETORNAR ::=  retornar:m VALOR_CODICIONAL:a {:NodeFinally nodeReturn = new NodeFinally(NodeEndType.RETORNAR, (Node) a, new PositionToken(mright+1, mleft+1), null);:}
+					|retornar error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el VALOR DE RETORNO, no es un valor aceptado");:}
+					;
+
+
+SENTENCIAS_CODIGO_CASO ::=	SENTENCIAS_CODIGO:a {: RESULT = a; :};
+
+SENTENCIAS_CODIGO_FUNC_PROC ::= SENTENCIAS_CODIGO:a {: RESULT = a; :};
+
+
+
+
+
+
