@@ -1,12 +1,16 @@
 Pista pista1{
 	>>cuerpo de la pista
 	var entero num1, num2,num3;
-	keep var doble doble1 = 0.5;
+	keep var doble doble1 = 0.5*2;
 	keep var cadena cadena1= "hola";
 	var caracter caracter1, caracter2='a';
 	var boolean flag1, flag2, falag3 = cadena1=="hola";
 	var boolean flag22= !(flag1);
-	var entero arreglo arr1 [5^3]; >> arreglo con 1 dimension y errores semanticos;
+	var entero arreglo arr1 [5^3];
+	var entero arreglo arre1 []={5,10,5+5*4};
+	var entero arreglo arre2 [][]={{0,1,2},{3,4,5}};
+	var entero arreglo arre21 [][]={{0,1,2},{3,4,5},{6,7,8}};
+	var entero arreglo arre3 [][][]={{{1,2},{3,4}},{{5,6},{7,8}}};
 	var cadena cad1, cad2, cad3 = cadena1 + " aca empieza otra linea :D";
 	>> en la linea anterior se ejemplifica que se puede hacer una inicializacion que usa a otra variable
 

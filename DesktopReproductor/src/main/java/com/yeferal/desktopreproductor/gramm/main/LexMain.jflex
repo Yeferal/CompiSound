@@ -184,15 +184,15 @@ Blancos               = [" "\r\t\b\f""]
     ({Letra}("_"|{Letra}|{Numero})*)        {printConsole(yytext()); return new Symbol(SymbolMainCode.identificador , yycolumn, yyline, yytext());}
     ({Numero})                              {printConsole(yytext()); return new Symbol(SymbolMainCode.numero , yycolumn, yyline, Integer.parseInt(yytext()));}
     ({Numero}("\."){Numero})                {printConsole(yytext()); return new Symbol(SymbolMainCode.decimal , yycolumn, yyline, Double.parseDouble(yytext()));}
-    (\"[^\"]*\")                            {printConsole(yytext()); return new Symbol(SymbolMainCode.cadena , yycolumn, yyline, yytext());}
+    (\"[^\"]*\")                            {printConsole(yytext()); return new Symbol(SymbolMainCode.cadena , yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
     // ("'"("#'"|"##"|"#r"|"#t"|"#n")"'")      {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special , yycolumn, yyline, yytext());}
-    ("'"("#'")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_comilla_simple , yycolumn, yyline, yytext());}
-    ("'"("##")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_hashtag , yycolumn, yyline, yytext());}
-    ("'"("#r")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_r , yycolumn, yyline, yytext());}
-    ("'"("#t")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_t , yycolumn, yyline, yytext());}
-    ("'"("#n")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_n , yycolumn, yyline, yytext());}
+    ("'"("#'")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_comilla_simple , yycolumn, yyline, yytext().substring(2, yytext().length() - 1));}
+    ("'"("##")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_hashtag , yycolumn, yyline, yytext().substring(2, yytext().length() - 1));}
+    ("'"("#r")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_r , yycolumn, yyline, yytext().substring(2, yytext().length() - 1));}
+    ("'"("#t")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_t , yycolumn, yyline, yytext().substring(2, yytext().length() - 1));}
+    ("'"("#n")"'")                          {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter_special_n , yycolumn, yyline, yytext().substring(2, yytext().length() - 1));}
 
-    (\'[^\']?\')                            {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter , yycolumn, yyline, yytext());}
+    (\'[^\']?\')                            {printConsole(yytext()); return new Symbol(SymbolMainCode.caracter , yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}
 
 
     {Espacio}                               {/*Ignore*/}

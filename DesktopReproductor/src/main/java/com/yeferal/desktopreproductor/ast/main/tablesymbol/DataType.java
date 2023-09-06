@@ -22,6 +22,6 @@ public enum DataType {
     BOOLEAN,
     IDENTIFICADOR,
     ARREGLO,
-    FUNCION,
-    VOID
+    FUNCION, //FUNCION
+    VOID //PROCEDIMIENTO
 }

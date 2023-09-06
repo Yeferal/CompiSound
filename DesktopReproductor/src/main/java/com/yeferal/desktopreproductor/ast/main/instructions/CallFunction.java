@@ -5,9 +5,13 @@
  */
 package com.yeferal.desktopreproductor.ast.main.instructions;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.errors.ErrorType;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.Node;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.Symbol;
+import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +46,23 @@ public class CallFunction extends Node{
     }
     
     @Override
-    public Object execute() {
+    public Object execute(Environment env) {
+        //Buscamos la funcion si existe
+        Symbol symbol = env.getTableSymbol().searchSymbolFunction(id, env.currentAmbit);
+        if (symbol == null) {
+            env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, id, "No sea a declarado una funcion con el nombre "+id+"."));
+            return null;
+        }
+        
+        //Declaracion de los parametros
+        
+        //asignacion, esta es una ejecucion
+        
+        //recorrec funcion, ejecutar las sentencias de la misma
+        
+        //devolver el valor con el tipo de variable retornada verificada.
+        
+        
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

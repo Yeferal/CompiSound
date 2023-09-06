@@ -8,6 +8,7 @@ package com.yeferal.desktopreproductor.ast.main;
 import com.sun.jdi.Value;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 
 /**
  *
@@ -23,8 +24,9 @@ public class Primitive extends Node{
     }
     
     @Override
-    public Object execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object execute(Environment env) {
+        System.out.println("Primitivo: "+String.valueOf(value));
+        return value;
     }
     
 }

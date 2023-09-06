@@ -2130,7 +2130,7 @@ public class SyntaxAnalyzerMain extends java_cup.runtime.lr_parser {
 	public void syntax_error(Symbol s) {
 		int row = s.right+1;
 		int column = s.left+1;
-		String token = (String) s.value;
+		String token = s.value + "";
 		addError(row, column, ErrorType.SYNTACTIC, token, "Secuencia de Token no reconocida.");
 		System.out.println("ERROR: Fila: "+(s.right+1)+", Columna: "+(s.left+1)+", Token: "+s.value);
 
@@ -3524,7 +3524,8 @@ RESULT = track;
 		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)).value;
-		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");
+		List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_ARREGLO_MULTI_STATE",22, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-4)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -3536,7 +3537,8 @@ RESULT = track;
 		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-3)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-3)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-3)).value;
-		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");
+		List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_ARREGLO_MULTI_STATE",22, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-4)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -3548,7 +3550,8 @@ RESULT = track;
 		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-3)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-3)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-3)).value;
-		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");
+		List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_ARREGLO_MULTI_STATE",22, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-4)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -3560,7 +3563,8 @@ RESULT = track;
 		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)).left;
 		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)).right;
 		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)).value;
-		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");
+		List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_ARREGLO_MULTI_STATE",22, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-2)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -4325,7 +4329,7 @@ RESULT = track;
               Object RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
+		String a = (String)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
 		RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.ENTERO, a);
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_CASO",36, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
@@ -5846,8 +5850,9 @@ RESULT = track;
               Object RESULT =null;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
-		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, a); 
+		String a = (String)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
+		 String letter = (String) a;
+				RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, letter.charAt(0)); 
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_DATA",60, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -5883,7 +5888,7 @@ RESULT = track;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_COMILLA_SIMPLE, a); 
+		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\''); 
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_DATA",60, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -5895,7 +5900,7 @@ RESULT = track;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_HASHTAG, a); 
+		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '#'); 
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_DATA",60, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -5907,7 +5912,7 @@ RESULT = track;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_R, a); 
+		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\r'); 
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_DATA",60, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -5919,7 +5924,7 @@ RESULT = track;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_T, a); 
+		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\t'); 
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_DATA",60, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;
@@ -5931,7 +5936,7 @@ RESULT = track;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_N, a); 
+		 RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\n'); 
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("VALOR_DATA",60, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;

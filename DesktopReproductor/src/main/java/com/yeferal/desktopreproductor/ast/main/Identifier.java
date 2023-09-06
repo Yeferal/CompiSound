@@ -5,8 +5,12 @@
  */
 package com.yeferal.desktopreproductor.ast.main;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.errors.ErrorType;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.Symbol;
+import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 
 /**
  *
@@ -29,8 +33,14 @@ public class Identifier extends Node{
     }
     
     @Override
-    public Object execute() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object execute(Environment env) {
+        Symbol symbol = env.getTableSymbol().searchSymbolIdentifier(id, env.currentAmbit);
+        if (symbol == null) {
+            env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, id, "No sea a declarado un variable con el nombre "+id+"."));
+            return null;
+        }
+        setType(symbol.getType());
+        return symbol;
     }
     
     

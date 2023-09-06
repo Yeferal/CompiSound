@@ -7,6 +7,7 @@ package com.yeferal.desktopreproductor.ast.main;
 
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 
 /**
  *
@@ -37,7 +38,7 @@ public abstract class Node {
         this.type = type;
     }
     
-    abstract public Object execute();
+    abstract public Object execute(Environment env);
     
 
 }

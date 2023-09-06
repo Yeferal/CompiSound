@@ -7,6 +7,7 @@ package com.yeferal.desktopreproductor.ast.main;
 
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 
 /**
  *
@@ -44,7 +45,7 @@ public class NodeFinally extends Node{
     }
     
     @Override
-    public Object execute() {
+    public Object execute(Environment env) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

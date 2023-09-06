@@ -5,6 +5,7 @@
  */
 package com.yeferal.desktopreproductor.ast.main.tree;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
 import com.yeferal.desktopreproductor.ast.main.AsignationArray;
 import com.yeferal.desktopreproductor.ast.main.AsignationVar;
 import com.yeferal.desktopreproductor.ast.main.DataArreglo;
@@ -47,58 +48,66 @@ import java.util.List;
 public class TraslatorMain {
     
     public void initMain(List<Node> listTrack){
+        Environment environment = new Environment();
         for (Node node : listTrack) {
-            runTreeTrack(node);
+            runTreeTrack(environment, node);
         }
     }
     
-    public void checkTrack(Node track){
+    public void checkTrack(Environment env, Node track){
         //Comprobacion de Tipos
         //Comprobacion de Nombres
         //Comprobacion de ambito
         //Comprobacion de flujo de control
         //Comprobacion de Unicidad
         //Comprobacion de Acceso
+        
     }
     
     
-    public void runTreeTrack(Node rootTrack){
+    public void runTreeTrack(Environment env, Node rootTrack){
         if (rootTrack instanceof TrackNode) {
             TrackNode trackNode = (TrackNode) rootTrack;
             System.out.println("Pista: "+trackNode.getId());
             for (Node node : trackNode.getListInstruction()) {
                 if (node instanceof ListDeclaration) {
-                    runDeclarationsGlobal(node);
+                    runDeclarationsGlobal(env, node);
                 }
             }
         
             for (Node node : trackNode.getListInstruction()) {
                 if (node instanceof FunctionProc || node instanceof Principal) {
-                    runFunctions(node);
+                    runFunctions(env, node);
                 }
             }
+            for (ErrorGramm errorGramm : env.getErrorsSemantic()) {
+                System.out.println(errorGramm.getStringError());
+            }
+            env.getTableSymbol().paintTable();
         }
         
 
     }
     
     
-    public void runDeclarationsGlobal(Node node){
+    public void runDeclarationsGlobal(Environment env, Node node){
         ListDeclaration listDeclaration = (ListDeclaration) node;
+        listDeclaration.execute(env);
         for (Node node1 : listDeclaration.getList()) {
             if (node1 instanceof DeclarationVar) {
                 DeclarationVar declarationVar = (DeclarationVar) node1;
-                System.out.println("Declaraction Var: "+declarationVar.getId());
+//                System.out.println("Declaraction Var: "+declarationVar.getId());
+//                declarationVar.execute(env);
             }
             
             if (node1 instanceof DeclaracionArray) {
                 DeclaracionArray declaracionArray = (DeclaracionArray) node1;
-                System.out.println("Declaracion Arreglo: "+ declaracionArray.getId());
+//                System.out.println("Declaracion Arreglo: "+ declaracionArray.getId());
             }
         }
     }
     
-    public void runFunctions(Node node){
+    public void runFunctions(Environment env, Node node){
         //Recorrer la lista de instrucciones y agrega a la tabla de simbolos
         
         if (node instanceof FunctionProc) {
@@ -112,13 +121,15 @@ public class TraslatorMain {
         }
     }
     
-    public void runAll(Node child){
+    public Object runAll(Environment env, Node child){
         if (child instanceof Primitive) {
             Primitive primitive = (Primitive) child;
             // Realizar acciones específicas para Primitive
+            return primitive;
         } else if (child instanceof Identifier) {
             Identifier identifier = (Identifier) child;
             // Realizar acciones específicas para Identifier
+            
         } else if (child instanceof CallFunction) {
             CallFunction callFunction = (CallFunction) child;
             // Realizar acciones específicas para CallFunction
@@ -210,6 +221,6 @@ public class TraslatorMain {
             InstEsperar instEsperar = (InstEsperar) child;
             // Realizar acciones específicas para InstEsperar
         }
-
+        return null;
     }
 }

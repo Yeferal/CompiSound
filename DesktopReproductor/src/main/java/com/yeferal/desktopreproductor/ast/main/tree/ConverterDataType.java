@@ -126,7 +126,7 @@ public class ConverterDataType {
     }
     
     
-    public boolean converterOpArith(DataType typeVar1, DataType typeVar2, ArithType arithType){
+    public boolean isConverterOpArith(DataType typeVar1, DataType typeVar2, ArithType arithType){
         switch(arithType){
             case ADD:
                 return true;
@@ -142,6 +142,152 @@ public class ConverterDataType {
             default:
                 return false;
         }
+    }
+    
+    public Object operateArith(Object val1, Object val2, DataType typeVar1, DataType typeVar2, ArithType arithType){
+        switch(arithType){
+            case ADD:
+                if (typeVar1 == DataType.CADENA && typeVar2 == DataType.CADENA) {
+                    return (String) (castCadena(val1) + castCadena(val2));
+                }else if (typeVar1 == DataType.CADENA && typeVar2 == DataType.DOBLE) {
+                    return (String) (castCadena(val1) + castDoble(val2));
+                }else if (typeVar1 == DataType.CADENA && typeVar2 == DataType.ENTERO) {
+                    return (String) (castCadena(val1) + castEntero(val2));
+                }else if (typeVar1 == DataType.CADENA && typeVar2 == DataType.CARACTER) {
+                    return (String) (castCadena(val1) + castChar(val2));
+                }else if (typeVar1 == DataType.CADENA && typeVar2 == DataType.BOOLEAN) {
+                    return (String) (castCadena(val1) + castBoolean(val2));
+                }
+                
+                
+                else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.CADENA) {
+                    return (String) (castDoble(val1) + castCadena(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.DOBLE) {
+                    return (double) (castDoble(val1) + castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.ENTERO) {
+                    return (double) (castDoble(val1) + castEntero(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.CARACTER) {
+                    return (double) (castDoble(val1) + castChar(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.BOOLEAN) {
+                    return (String) (castDoble(val1) + (castBoolean(val2)? "true" : "false"));
+                }
+                
+                else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.CADENA) {
+                    return (String) (castEntero(val1) + castCadena(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.DOBLE) {
+                    return (double) (castEntero(val1) + castDoble(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.ENTERO) {
+                    return (int) (castEntero(val1) + castEntero(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.CARACTER) {
+                    return (int) (castEntero(val1) + castChar(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.BOOLEAN) {
+                    return (int) (castEntero(val1) + (castBoolean(val2)? 1 : 0));
+                }
+                
+                else if (typeVar1 == DataType.CARACTER && typeVar2 == DataType.CADENA) {
+                    return (String) (castChar(val1) + castCadena(val2));
+                }else if (typeVar1 == DataType.CARACTER && typeVar2 == DataType.DOBLE) {
+                    return (double) (castChar(val1) + castDoble(val2));
+                }else if (typeVar1 == DataType.CARACTER && typeVar2 == DataType.ENTERO) {
+                    return (int) (castChar(val1) + castEntero(val2));
+                }else if (typeVar1 == DataType.CARACTER && typeVar2 == DataType.CARACTER) {
+                    return (String) (castChar(val1) + castChar(val2) + "");
+                }else if (typeVar1 == DataType.CARACTER && typeVar2 == DataType.BOOLEAN) {
+                    return (int) (castChar(val1) + (castBoolean(val2)? 1 : 0));
+                }
+                
+                else if (typeVar1 == DataType.BOOLEAN && typeVar2 == DataType.CADENA) {
+                    return (String) ((castBoolean(val2)? "true" : "false") + castCadena(val2));
+                }else if (typeVar1 == DataType.BOOLEAN && typeVar2 == DataType.DOBLE) {
+                    return (double) ((castBoolean(val1)? 1 : 0) + castDoble(val2));
+                }else if (typeVar1 == DataType.BOOLEAN && typeVar2 == DataType.ENTERO) {
+                    return (int) ((castBoolean(val1)? 1 : 0) + castEntero(val2));
+                }else if (typeVar1 == DataType.BOOLEAN && typeVar2 == DataType.CARACTER) {
+                    return (String) ((castBoolean(val1)? 1 : 0) + castChar(val2) + "");
+                }else if (typeVar1 == DataType.BOOLEAN && typeVar2 == DataType.BOOLEAN) {
+                    return (int) ((castBoolean(val1)? 1 : 0) + (castBoolean(val2)? 1 : 0));
+                }
+                
+                return null;
+            case SUBTRAC:
+                if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.ENTERO) {
+                    return (int) (castEntero(val1) - castEntero(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.DOBLE) {
+                    return (double) (castEntero(val1) - castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.DOBLE) {
+                    return (double) (castDoble(val1) - castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.ENTERO) {
+                    return (double) (castDoble(val1) - castEntero(val2));
+                }
+                return null;
+            case MULTI:
+                if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.ENTERO) {
+                    return (int) (castEntero(val1) * castEntero(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.DOBLE) {
+                    return (double) (castEntero(val1) * castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.DOBLE) {
+                    return (double) (castDoble(val1) * castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.ENTERO) {
+                    return (double) (castDoble(val1) * castEntero(val2));
+                }
+                return null;
+            case DIV:
+                if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.ENTERO) {
+                    double resultDiv = (double) (castDoble(val1) / castDoble(val2));
+                    return (resultDiv != (int) resultDiv)? resultDiv : (int) resultDiv;
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.DOBLE) {
+                    return (double) (castEntero(val1) / castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.DOBLE) {
+                    return (double) (castDoble(val1) / castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.ENTERO) {
+                    return (double) (castDoble(val1) / castEntero(val2));
+                }
+                return null;
+            case MOD:
+                if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.ENTERO) {
+                    double resultDiv = (double) (castDoble(val1) % castDoble(val2));
+                    return (resultDiv != (int) resultDiv)? resultDiv : (int) resultDiv;
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.DOBLE) {
+                    return (double) (castEntero(val1) % castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.DOBLE) {
+                    return (double) (castDoble(val1) % castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.ENTERO) {
+                    return (double) (castDoble(val1) % castEntero(val2));
+                }
+                return null;
+            case POW:
+                if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.ENTERO) {
+                    return (int) Math.pow(castEntero(val1), castEntero(val2));
+                }else if (typeVar1 == DataType.ENTERO && typeVar2 == DataType.DOBLE) {
+                    return (double) Math.pow(castEntero(val1), castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.DOBLE) {
+                    return (double) (castDoble(val1) - castDoble(val2));
+                }else if (typeVar1 == DataType.DOBLE && typeVar2 == DataType.ENTERO) {
+                    return (double) Math.pow(castDoble(val1), castEntero(val2));
+                }
+                return null;
+            default:
+                return null;
+        }
+    }
+    
+    public DataType getTypeData(DataType typeVar1, DataType typeVar2, ArithType arithType){
+        
+        if (typeVar1 == DataType.CADENA || typeVar2 == DataType.CADENA) {
+            return DataType.CADENA;
+        }else if (typeVar1 == DataType.DOBLE || typeVar2 == DataType.DOBLE) {
+            return DataType.DOBLE;
+        }else if (typeVar1 == DataType.ENTERO || typeVar2 == DataType.ENTERO) {
+            if (arithType == ArithType.DIV || arithType == ArithType.MOD) {
+                return DataType.DOBLE;
+            }
+            return DataType.ENTERO;
+        }else if (typeVar1 == DataType.CARACTER || typeVar2 == DataType.CARACTER) {
+            return DataType.CARACTER;
+        }else if (typeVar1 == DataType.BOOLEAN || typeVar2 == DataType.BOOLEAN) {
+            return DataType.BOOLEAN;
+        }
+        return null;
     }
     
     

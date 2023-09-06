@@ -21,7 +21,7 @@ parser code
 	public void syntax_error(Symbol s) {
 		int row = s.right+1;
 		int column = s.left+1;
-		String token = (String) s.value;
+		String token = s.value + "";
 		addError(row, column, ErrorType.SYNTACTIC, token, "Secuencia de Token no reconocida.");
 		System.out.println("ERROR: Fila: "+(s.right+1)+", Columna: "+(s.left+1)+", Token: "+s.value);
 
@@ -77,7 +77,8 @@ terminal igual_igual, diferente, mayor_q, menor_q, mayor_igual, menor_igual, is_
 terminal and, nand, or, nor, xor, not;
 terminal mas, menos, por, div, modulo, potencia;
 terminal keep, var, igual;
-terminal cadena, caracter;
+terminal cadena;
+terminal String caracter;
 terminal Boolean true_rsv, false_rsv;
 terminal Double decimal;
 terminal Integer numero;
@@ -356,10 +357,14 @@ VALOR_ARREGLO_MULTI_STATE ::=	 VALOR_ARREGLO_MULTI_STATE:d coma llave_a:m VALOR_
 								|llave_a:m VALOR_UNIT_ARREGLO:a llave_c {:List<Node> list = new ArrayList<>();
 								list.add(new DataArreglo((List<Node>) a, new PositionToken(mright+1, mleft+1)));
 								RESULT = list;:}
-								|VALOR_ARREGLO_MULTI_STATE coma llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
-								|VALOR_ARREGLO_MULTI_STATE error:e llave_a VALOR_ARREGLO_MULTI_STATE llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");:}
-								|VALOR_ARREGLO_MULTI_STATE error:e llave_a VALOR_UNIT_ARREGLO llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");:}
-								|llave_a error:e llave_c {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
+								|VALOR_ARREGLO_MULTI_STATE coma llave_a error:e llave_c {:List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
+								|VALOR_ARREGLO_MULTI_STATE error:e llave_a VALOR_ARREGLO_MULTI_STATE llave_c {:List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");:}
+								|VALOR_ARREGLO_MULTI_STATE error:e llave_a VALOR_UNIT_ARREGLO llave_c {:List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo, se esperava una COMA ','");:}
+								|llave_a error:e llave_c {:List<Node> list = new ArrayList<>(); RESULT = list;
+								parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el valor del arreglo");:}
 								;
 
 VALOR_UNIT_ARREGLO ::= 	 VALOR_UNIT_ARREGLO:d coma VALOR_STATE:a {:List<Node> list = (List<Node>) d;
@@ -698,14 +703,15 @@ VALOR_DATA ::= 	 numero:a {: RESULT = new Primitive(new PositionToken(aright+1, 
 				|decimal:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.DOBLE, a); :}
 				|true_rsv:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.BOOLEAN, a); :}
 				|false_rsv:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.BOOLEAN, a); :}
-				|caracter:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, a); :}
+				|caracter:a {: String letter = (String) a;
+				RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, letter.charAt(0)); :}
 				|cadena:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CADENA, a); :}
 				|identificador:a {: RESULT = new Identifier((String) a,new PositionToken(aright+1, aleft+1), DataType.IDENTIFICADOR); :}
-				|caracter_special_comilla_simple:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_COMILLA_SIMPLE, a); :}
-				|caracter_special_hashtag:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_HASHTAG, a); :}
-				|caracter_special_r:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_R, a); :}
-				|caracter_special_t:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_T, a); :}
-				|caracter_special_n:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER_ESPECIAL_N, a); :}
+				|caracter_special_comilla_simple:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\''); :}
+				|caracter_special_hashtag:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '#'); :}
+				|caracter_special_r:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\r'); :}
+				|caracter_special_t:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\t'); :}
+				|caracter_special_n:a {: RESULT = new Primitive(new PositionToken(aright+1, aleft+1), DataType.CARACTER, '\n'); :}
 				|STRUCT_LLAMADA_FUNCION:a {: RESULT = a; :}
 				|STRUCT_LLAMADA_ARREGLO:a {: RESULT = a; :}
 				|STRUCT_REPRODUCIR:a {: RESULT = a; :}

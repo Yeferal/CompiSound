@@ -143,6 +143,10 @@ public class MainWindow extends javax.swing.JFrame {
             if (lexicalErrors.size()==0 && syntaxErrors.size()==0) {
                 treeMain.setListTrack(syntaxAnalyzerMain.getListTracks());
                 traslatorMain.initMain(treeMain.getListTrack());
+            }else {
+                for (ErrorGramm syntaxError : syntaxErrors) {
+                    System.out.println(syntaxError.getStringError());
+                }
             }
         } catch (Exception e) {
             System.out.println("Error");
