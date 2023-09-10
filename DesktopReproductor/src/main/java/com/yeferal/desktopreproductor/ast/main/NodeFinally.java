@@ -5,8 +5,11 @@
  */
 package com.yeferal.desktopreproductor.ast.main;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.errors.ErrorType;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.Symbol;
 import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 
 /**
@@ -44,8 +47,39 @@ public class NodeFinally extends Node{
         this.valueReturn = valueReturn;
     }
     
+    public String getTypeString(){
+        switch(nodeEndType){
+            case SALIR:
+                return "salir:";
+            case CONTINUAR:
+                return "Continuar:";
+            case RETORNAR:
+                return "Rertornar:";
+            default:
+                return "";
+        }
+    }
+    
     @Override
     public Object execute(Environment env) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object val = valueReturn.execute(env);
+        Object valT = val;
+        setType(valueReturn.getType());
+        
+        if (val == null) {
+            env.getErrorsSemantic().add(new ErrorGramm(valueReturn.getPositionToken(),ErrorType.SEMANTIC, "", "El valor de retorno es nulo."));
+            return null;
+        }
+
+        if (valueReturn instanceof Identifier) {
+            Symbol s = (Symbol) val;
+            valT = s.getValue();
+            if (s.getRol() == DataType.ARREGLO) {
+                env.getErrorsSemantic().add(new ErrorGramm(valueReturn.getPositionToken(),ErrorType.SEMANTIC, "", "El valor "+s.getName()+" no es un arreglo."));
+                return null;
+            }
+        }
+        System.out.println("return "+valT+";");
+        return valT;
     }
 }

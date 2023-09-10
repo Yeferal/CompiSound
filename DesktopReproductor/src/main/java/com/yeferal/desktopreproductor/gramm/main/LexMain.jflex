@@ -13,7 +13,7 @@ import com.yeferal.desktopreproductor.ast.errors.*;
 
     //coidgo de usuario en sintaxis java
     public void printConsole(String s){
-        System.out.print(s+" ");
+        // System.out.print(s+" ");
     }
 
     public void addError(int row, int column, String token, String description){

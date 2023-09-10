@@ -7,10 +7,6 @@ Pista pista1{
 	var boolean flag1, flag2, falag3 = cadena1=="hola";
 	var boolean flag22= !(flag1);
 	var entero arreglo arr1 [5^3];
-	var entero arreglo arre1 []={5,10,5+5*4};
-	var entero arreglo arre2 [][]={{0,1,2},{3,4,5}};
-	var entero arreglo arre21 [][]={{0,1,2},{3,4,5},{6,7,8}};
-	var entero arreglo arre3 [][][]={{{1,2},{3,4}},{{5,6},{7,8}}};
 	var cadena cad1, cad2, cad3 = cadena1 + " aca empieza otra linea :D";
 	>> en la linea anterior se ejemplifica que se puede hacer una inicializacion que usa a otra variable
 
@@ -19,23 +15,66 @@ Pista pista1{
 		>>inicializacion
 		num1=((1*2)/(1+5))%2; >>se vuelve un entero
 		num3=3;
+		num2=2;
 		caracter1='#n';
 		>>termina de iniciar var
+
+		Reproducir(Re, 1, 3000, 3);
+		>>Esperar(2000, 3);
+		Reproducir(La, 1, 3000, 3);
+		>>Esperar(2000, 3);
+		Reproducir(Do, 1, 3000, 3);
+		>>Esperar(2000, 3);
+		Reproducir(Sol, 1, 3000, 3);
+		>>Esperar(2000, 3);
+		Reproducir(Re, 2, 3000, 4);
+		>>Esperar(2000, 4);
+		Reproducir(La, 2, 3000, 5);
+		>>Esperar(2000, 5);
+		Reproducir(Do, 2, 3000, 6);
+		>>Esperar(2000, 6);
+		>>Esperar(2000, 3);
+		>>Esperar(2000, 4);
+		Reproducir(Sol, 2, 3000, 7);
+		>>Esperar(2000, 7);
+		Reproducir(Re, 1, 3000, 4);
+		>>Esperar(2000, 4);
+		Reproducir(La, 1, 3000, 5);
+		>>Esperar(2000, 5);
+		Reproducir(Do, 1, 3000, 6);
+		>>Esperar(2000, 6);
+		Reproducir(Sol, 1, 3000, 7);
+		Reproducir(Re, 3, 3000, 3);
+		Reproducir(La, 3, 3000, 3);
+		Reproducir(Do, 3, 3000, 3);
+		Reproducir(Sol, 3, 3000, 3);
+
 		funcion1();
+		funcion2(4,10);
+		funcion3(4);
+		funcoin4();
 		funcion5();
 		funcion6();
 		funcionOrdenar();
+		funcion7();
+		funcion7();
+		funcion3(3);
+		funcion3(3);
 	}
 	
 	entero funcion1(){
-		var entero arreglo arre1 [3]={5,10,5+num2*num3};
-		var entero arreglo arre2 [3][2]={{0,1,2},{3,4,5}};
-		var entero arreglo arre3 [2][2][2]={{{1,2},{3,4}},{{5,6},{7,8}}};
+		arr1[0] = 1;
+		arr1[2] = 3;
+		arr1[5] = 6;
+		Mensaje("resultados de busqueda: "+arr1[2]);
+		var entero arreglo arre1 []={5,10,5+num2*num3};
+		var entero arreglo arre2 [][]={{0,1,2},{3,4,5}};
+		var entero arreglo arre3 [][][]={{{1,2},{3,4}},{{5,6},{7,8}}};
 		retornar num2;
 	}
 	
-	keep entero funcion2(entero p1,entero p2){
-		si(cadena1){
+	keep entero funcion2(entero p1, entero p2){
+		si(cadena1=="hola"){
 			>>imprimier algo
 			retornar 1;
 		}
@@ -87,7 +126,7 @@ Pista pista1{
 	keep funcion7(){
 		Reproducir(Do, (2*1)+1, 50*num2+62*6, 3);
 		var entero tiempo = Reproducir(Re, 6, 15000, 1);
-		Espera(2000, 8);
+		Esperar(2000, 8);
 		Reproducir(Re,4, 1500,3);
 		Esperar(200,5);
 		Reproducir(Re,4, 1500,3);
@@ -98,7 +137,7 @@ Pista pista1{
 	}
         
 	funcionOrdenar(){
-		var entero arreglo arre1 [3]={5,10,5+num2*num3};
+		var entero arreglo arre1 []={5,10,5+num2*num3};
 		Ordenar (arre1, descendente);
 		Sumarizar(arre1); >> valor de cad:
 		var entero resultado;

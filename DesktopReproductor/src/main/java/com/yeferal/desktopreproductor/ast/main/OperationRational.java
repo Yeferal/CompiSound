@@ -152,7 +152,7 @@ public class OperationRational extends Node{
             }
         }
         
-        System.out.println("Valor Obtendio: "+value);
+//        System.out.println("Valor Obtendio: "+value);
         return value;
     }
     

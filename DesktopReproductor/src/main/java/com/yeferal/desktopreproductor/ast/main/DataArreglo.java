@@ -62,17 +62,6 @@ public class DataArreglo extends Node{
                 }else {
                     System.out.println("Arreglo incorrecto");
                 }
-//                for (Node node : contentList) {
-//                    if (node instanceof DataArreglo) {
-//                        System.out.println("Si es xD un DataArreglo");
-////                        node.execute(env);
-//                    }else {
-//                        System.out.println("No es una DataArreglo");
-//                        Object obj = node.execute(env);
-//                        
-//                    }
-//                    
-//                }
             }
         }
         return null;
@@ -133,17 +122,5 @@ public class DataArreglo extends Node{
             }
         }
         return dimCount;
-    }
-    
-    //Cuando son nodos de tipo valor
-    public ArrayList<ArrayList<Object>> runListSimpleNode(Environment env){
-        System.out.println("Nodo de multiples dimensiones");
-        return null;
-    }
-    
-    //Cuando son nodos de tipo Array
-    public ArrayList<Object> runListComplexNode(Environment env){
-        System.out.println("Nodo de una Dimension");
-        return null;
     }
 }

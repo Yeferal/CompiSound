@@ -6948,7 +6948,7 @@ RESULT = track;
 		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).left;
 		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()).right;
 		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerMain$stack.peek()).value;
-		NodeFinally nodeReturn = new NodeFinally(NodeEndType.RETORNAR, (Node) a, new PositionToken(mright+1, mleft+1), null);
+		NodeFinally nodeReturn = new NodeFinally(NodeEndType.RETORNAR, (Node) a, new PositionToken(mright+1, mleft+1), null); RESULT = nodeReturn;
               CUP$SyntaxAnalyzerMain$result = parser.getSymbolFactory().newSymbol("STRUCT_RETORNAR",72, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.elementAt(CUP$SyntaxAnalyzerMain$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerMain$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerMain$result;

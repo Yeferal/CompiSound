@@ -5,11 +5,13 @@
  */
 package com.yeferal.desktopreproductor.ast.errors;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Usuario
  */
-public class ErrorGramm {
+public class ErrorGramm implements Serializable{
     private PositionToken positionToken;
     private ErrorType errorType;
     private String token, description;

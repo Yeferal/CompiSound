@@ -14,6 +14,8 @@ import com.yeferal.desktopreproductor.ast.main.tree.ConverterDataType;
 import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -105,6 +107,11 @@ public class ListDeclaration extends Node{
         this.dimensions = dimensions;
     }
     
+    public Deque<Integer> setAmbitPileS(Deque<Integer> ambitsPile){
+        Deque<Integer> tempPile = new LinkedList<>(ambitsPile);
+        return tempPile;
+    }
+    
     @Override
     public Object execute(Environment env) {
         if (array) {
@@ -123,9 +130,9 @@ public class ListDeclaration extends Node{
                     for (Node node : list) {
                         DeclarationVar declarationVar = (DeclarationVar) node;
                         if (env.getTableSymbol().searchSymbol(declarationVar.getId(), env.currentAmbit) == null) {
-                            Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.getTableSymbol().getPileAmbit().peek(), DataType.IDENTIFICADOR, null);
+                            Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.currentAmbit, DataType.IDENTIFICADOR, null);
                             sTemp.setGlobal(keep);
-                            sTemp.setAmbitsPile(env.getTableSymbol().getPileAmbit());
+                            sTemp.setAmbitsPile(setAmbitPileS(env.getTableSymbol().getPileAmbit()));
                             env.getTableSymbol().addSymbol(sTemp);
                         }else {
                             env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, "", "Ya existe una variable con el nombre "+declarationVar.getId()+"."));
@@ -142,9 +149,9 @@ public class ListDeclaration extends Node{
                     for (Node node : list) {
                         DeclarationVar declarationVar = (DeclarationVar) node;
                         if (env.getTableSymbol().searchSymbol(declarationVar.getId(), env.currentAmbit) == null) {
-                            Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.getTableSymbol().getPileAmbit().peek(), DataType.IDENTIFICADOR, valConverter);
+                            Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.currentAmbit, DataType.IDENTIFICADOR, valConverter);
                             sTemp.setGlobal(keep);
-                            sTemp.setAmbitsPile(env.getTableSymbol().getPileAmbit());
+                            sTemp.setAmbitsPile(setAmbitPileS(env.getTableSymbol().getPileAmbit()));
                             env.getTableSymbol().addSymbol(sTemp);
                         }else {
                             env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, "", "Ya existe una variable con el nombre "+declarationVar.getId()+"."));
@@ -162,9 +169,9 @@ public class ListDeclaration extends Node{
             for (Node node : list) {
                 DeclarationVar declarationVar = (DeclarationVar) node;
                 if (env.getTableSymbol().searchSymbol(declarationVar.getId(), env.currentAmbit) == null) {
-                    Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.getTableSymbol().getPileAmbit().peek(), DataType.IDENTIFICADOR, null);
+                    Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.currentAmbit, DataType.IDENTIFICADOR, null);
                     sTemp.setGlobal(keep);
-                    sTemp.setAmbitsPile(env.getTableSymbol().getPileAmbit());
+                    sTemp.setAmbitsPile(setAmbitPileS(env.getTableSymbol().getPileAmbit()));
                     env.getTableSymbol().addSymbol(sTemp);
                 }else {
                     env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, "", "Ya existe una variable con el nombre "+declarationVar.getId()+"."));
@@ -211,9 +218,15 @@ public class ListDeclaration extends Node{
                     if (asignation == null) {
                         for (Node node : list) {
                             DeclaracionArray declarationVar =  (DeclaracionArray) node;
-                            Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.getTableSymbol().getPileAmbit().peek(), DataType.ARREGLO, null);
+                            int maxPos = getTotalSize(listDim);
+                            List<Object> arr = new ArrayList<>(maxPos);
+                            // Agrega elementos a tu ArrayList
+                            for (int i = 0; i < maxPos; i++) {
+                                arr.add(null); // Agrega elementos nulos para alcanzar la capacidad deseada
+                            }
+                            Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.currentAmbit, DataType.ARREGLO, arr );
                             sTemp.setGlobal(keep);
-                            sTemp.setAmbitsPile(env.getTableSymbol().getPileAmbit());
+                            sTemp.setAmbitsPile(setAmbitPileS(env.getTableSymbol().getPileAmbit()));
                             sTemp.setListDim(listDim);
                             env.getTableSymbol().addSymbol(sTemp);
                         }
@@ -269,9 +282,9 @@ public class ListDeclaration extends Node{
                     //setear los datos del arreglo en el Symbolo
                     for (Node node : list) {
                         DeclaracionArray declarationVar =  (DeclaracionArray) node;
-                        Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.getTableSymbol().getPileAmbit().peek(), DataType.ARREGLO, listData);
+                        Symbol sTemp = new Symbol(declarationVar.getId(), getType(), env.currentAmbit, DataType.ARREGLO, listData);
                         sTemp.setGlobal(keep);
-                        sTemp.setAmbitsPile(env.getTableSymbol().getPileAmbit());
+                        sTemp.setAmbitsPile(setAmbitPileS(env.getTableSymbol().getPileAmbit()));
                         sTemp.setListDim(listaD);
                         env.getTableSymbol().addSymbol(sTemp);
                     }
@@ -341,6 +354,14 @@ public class ListDeclaration extends Node{
         listDimTemp.add(listNode.size());
         
         return listDimTemp;
+    }
+    
+    private int getTotalSize(List<Integer> listDim){
+        int res = 1;
+        for (Integer integer : listDim) {
+            res *= integer;
+        }
+        return res;
     }
     
     private List<Object> getDataArray(Environment env, List<Node> listNode){

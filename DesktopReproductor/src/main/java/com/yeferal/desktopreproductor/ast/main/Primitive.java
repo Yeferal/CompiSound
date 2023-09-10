@@ -25,7 +25,7 @@ public class Primitive extends Node{
     
     @Override
     public Object execute(Environment env) {
-        System.out.println("Primitivo: "+String.valueOf(value));
+//        System.out.println("Primitivo: "+String.valueOf(value));
         return value;
     }
     

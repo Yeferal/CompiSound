@@ -8,6 +8,7 @@ package com.yeferal.desktopreproductor.ast.main.tablesymbol;
 import com.yeferal.desktopreproductor.ast.main.DataArreglo;
 import com.yeferal.desktopreproductor.ast.main.Node;
 import com.yeferal.desktopreproductor.ast.main.tree.Environment;
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -18,7 +19,7 @@ import java.util.Stack;
  *
  * @author Usuario
  */
-public class Symbol {
+public class Symbol implements Serializable{
     private String name;
     private DataType type;
     private int ambit;
@@ -56,6 +57,16 @@ public class Symbol {
                 }else {
                     return contentList.get(i);
                 }
+            }
+        }
+        return null;
+    }
+    
+    public Object searchValueArrayFromPosition(Environment env, int position){
+        if (value instanceof ArrayList) {
+            ArrayList<Object> contentList = (ArrayList<Object>) value;
+            if (position < contentList.size()) {
+                return contentList.get(position);
             }
         }
         return null;

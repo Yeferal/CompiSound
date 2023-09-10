@@ -7,12 +7,13 @@ package com.yeferal.desktopreproductor.ast.main.tree;
 
 import com.yeferal.desktopreproductor.ast.main.ArithType;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import java.io.Serializable;
 
 /**
  *
  * @author Usuario
  */
-public class ConverterDataType {
+public class ConverterDataType implements Serializable{
     
     /**
      * TipoVariable TipoValorAsignar    Resultado

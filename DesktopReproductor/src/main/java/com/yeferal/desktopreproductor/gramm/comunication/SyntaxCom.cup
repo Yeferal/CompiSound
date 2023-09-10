@@ -1,0 +1,160 @@
+package com.yeferal.desktopreproductor.gramm.comunication;
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import com.yeferal.desktopreproductor.ast.errors.*;
+import com.yeferal.desktopreproductor.ast.main.instructions.notas.MusicalNotes;
+
+//Codigo para el parser, variables, metodos
+parser code
+{:
+    //codigo
+	List<ErrorGramm> syntaxErrors = new ArrayList<>();
+
+	public void syntax_error(Symbol s) {
+		int row = s.right+1;
+		int column = s.left+1;
+		String token = s.value + "";
+		addError(row, column, ErrorType.SYNTACTIC, token, "Secuencia de Token no reconocida.");
+		System.out.println("ERROR: Fila: "+(s.right+1)+", Columna: "+(s.left+1)+", Token: "+s.value);
+
+	}
+
+	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+		if(cur_token.toString().equals("#0")){
+			//String message = s.toString();
+			//StringBuilder m = new StringBuilder("Error: ");
+			String token =  "Fin del archivo";
+			int column = cur_token.left+1;
+			int row = cur_token.right+1;
+			addError(row, column, ErrorType.SYNTACTIC, token, "No se pudo recuperar y seguir analizando, no se encontraron mas tokens.");
+            
+        }else{
+			//String message = s.toString();
+			//StringBuilder m = new StringBuilder("Error: ");
+			String token =  (String) cur_token.value;
+			int column = cur_token.left+1;
+			int row = cur_token.right+1;
+			addError(row, column, ErrorType.SYNTACTIC, token, "No se pudo recuperar y seguir analizando.");
+			
+        }
+		System.out.println("No se pudo recuperar y seguir analizando, no se encontraron mas tokens.");
+	}
+
+	public void addError(int row, int column, ErrorType errorType, String token, String description){
+        syntaxErrors.add(new ErrorGramm(new PositionToken(row, column), errorType, token, description));
+    }
+
+	public List<ErrorGramm> getSyntaxErrors(){
+        return syntaxErrors;
+    }
+
+	
+
+:}
+
+//Coidgo para las acciones gramaticales
+action code
+{:
+    
+:}
+
+terminal solicitud_a, solicitud_c, lista, pista, tipo_a, tipo_c, nombre_a, nombre_c;
+terminal listas_a, listas_c, lista_a, lista_c, nombre, pistas, pista_ab, duracion, aleatorio, si_rsv, no;
+terminal pistas_a, pistas_c, canal_ab, numero_rsv, canal_c, nota_ab, frecuencia, pistanueva;
+terminal datos_a, datos_c, canal_a, nota_a, nota_c, octava_a, octava_c, duracion_a, duracion_c;
+terminal cerrar, igual, numero, decimal, cadena;
+terminal do_rsv, re, mi, fa, sol, la, do_s, re_s, fa_s, sol_s, la_s, si;
+
+non terminal INICIO, CODE, STATE_SOLICITUD, STATE_CONT_SOLICITUD, STATE_OPT_SOLICITUD, STATE_NUEVA_SOLICITUD;
+non terminal STATE_DATOS, NOTA_STATE, STATE_OTROS, STATE_LISTA_LISTAS, STATE_CONT_LISTA_LISTAS;
+non terminal STATE_LISTA_PISTAS, STATE_CONT_LISTA_PISTAS, STATE_LISTA_PISTAS_ONLY, STATE_ALEATORIO;
+non terminal STATE_CONTE_LISTA_PISTAS_ONLY, STATE_PISTA, STATE_CONT_PISTA, STRUCT_PISTA;
+/*non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+*/
+
+start with INICIO;
+
+INICIO ::= CODE;
+
+CODE ::= STATE_SOLICITUD
+        |STATE_OTROS;
+
+STATE_SOLICITUD ::= solicitud_a STATE_CONT_SOLICITUD solicitud_c;
+
+STATE_CONT_SOLICITUD ::= tipo_a lista tipo_c STATE_OPT_SOLICITUD
+                        |tipo_a pista tipo_c STATE_OPT_SOLICITUD
+                        |tipo_a pistanueva tipo_c STATE_NUEVA_SOLICITUD;
+
+STATE_OPT_SOLICITUD ::=  nombre_a cadena nombre_c
+                        | ;
+
+STATE_NUEVA_SOLICITUD ::=    STATE_NUEVA_SOLICITUD STATE_DATOS
+                            |STATE_DATOS;
+
+STATE_DATOS ::= datos_a 
+                    canal_a numero canal_c 
+                    nota_a NOTA_STATE nota_c
+                    octava_a numero octava_c
+                    duracion_a numero duracion_c
+                datos_c;
+
+NOTA_STATE ::=	 do_rsv {:RESULT = MusicalNotes.C;:}
+				|do_s {:RESULT = MusicalNotes.C_S;:}
+				|re {:RESULT = MusicalNotes.D;:}
+				|re_s {:RESULT = MusicalNotes.D_S;:}
+				|mi {:RESULT = MusicalNotes.E;:}
+				|fa {:RESULT = MusicalNotes.F;:}
+				|fa_s {:RESULT = MusicalNotes.F_S;:}
+				|sol {:RESULT = MusicalNotes.G;:}
+				|sol_s {:RESULT = MusicalNotes.G_S;:}
+				|la {:RESULT = MusicalNotes.A;:}
+				|la_s {:RESULT = MusicalNotes.A_S;:}
+				|si {:RESULT = MusicalNotes.B;:};
+
+STATE_OTROS ::= STATE_LISTA_LISTAS
+                |STATE_LISTA_PISTAS
+                |STATE_LISTA_PISTAS_ONLY
+                |STATE_PISTA
+                ;
+
+STATE_LISTA_LISTAS ::=  listas_a
+                            STATE_CONT_LISTA_LISTAS
+                        listas_c;
+
+STATE_CONT_LISTA_LISTAS ::= STATE_CONT_LISTA_LISTAS lista_a nombre igual cadena pistas igual numero cerrar
+                            |lista_a nombre igual cadena pistas igual numero cerrar;
+
+STATE_LISTA_PISTAS ::=  lista_a nombre cadena aleatorio STATE_ALEATORIO cerrar
+                            STATE_CONT_LISTA_PISTAS
+                        lista_c;
+
+STATE_ALEATORIO ::= si_rsv
+                    |no;
+
+STATE_CONT_LISTA_PISTAS ::= STATE_CONT_LISTA_PISTAS pista_ab nombre igual cadena duracion igual numero cerrar
+                            |pista_ab nombre igual cadena duracion igual numero cerrar;
+
+STATE_LISTA_PISTAS_ONLY ::= pistas_a
+                                STATE_CONTE_LISTA_PISTAS_ONLY
+                            pistas_c;
+
+STATE_CONTE_LISTA_PISTAS_ONLY ::= STATE_CONTE_LISTA_PISTAS_ONLY pista_ab nombre igual cadena duracion igual numero cerrar
+                                |pista_ab nombre igual cadena duracion igual numero cerrar;
+
+STATE_PISTA ::= pista_ab nombre igual cadena cerrar
+                    STATE_CONT_PISTA
+                pista;
+
+STATE_CONT_PISTA ::= STATE_CONT_PISTA STRUCT_PISTA
+                    |STRUCT_PISTA;
+
+STRUCT_PISTA ::=    canal_ab numero_rsv igual numero cerrar
+                        nota_ab duracion igual numero frecuencia igual decimal cerrar
+                    canal_c;
+
+

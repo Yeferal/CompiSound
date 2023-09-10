@@ -5,11 +5,13 @@
  */
 package com.yeferal.desktopreproductor.ast.errors;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Usuario
  */
-public class PositionToken {
+public class PositionToken implements Serializable{
     private int row, column;
 
     public PositionToken(int row, int column) {

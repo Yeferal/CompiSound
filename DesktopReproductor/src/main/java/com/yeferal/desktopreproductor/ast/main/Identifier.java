@@ -34,7 +34,7 @@ public class Identifier extends Node{
     
     @Override
     public Object execute(Environment env) {
-        Symbol symbol = env.getTableSymbol().searchSymbolIdentifier(id, env.currentAmbit);
+        Symbol symbol = env.getTableSymbol().searchSymbol(id, env.currentAmbit);
         if (symbol == null) {
             env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, id, "No sea a declarado un variable con el nombre "+id+"."));
             return null;

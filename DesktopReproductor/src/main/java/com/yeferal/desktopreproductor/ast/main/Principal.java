@@ -32,6 +32,13 @@ public class Principal extends Node{
     
     @Override
     public Object execute(Environment env) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        System.out.println("AMBITPS DE ;A ");
+//        env.getTableSymbol().backAllAmbit();
+        for (Node instruction : instructions) {
+            //EJECTURA INSTRUCCIONES
+            
+            instruction.execute(env);
+        }
+        return null;
     }
 }

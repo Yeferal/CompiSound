@@ -5,9 +5,15 @@
  */
 package com.yeferal.desktopreproductor.ast.main.conditionals;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.errors.ErrorType;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
+import com.yeferal.desktopreproductor.ast.main.Identifier;
 import com.yeferal.desktopreproductor.ast.main.Node;
+import com.yeferal.desktopreproductor.ast.main.NodeEndType;
+import com.yeferal.desktopreproductor.ast.main.NodeFinally;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.Symbol;
 import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +28,7 @@ public class ConditionalSi extends Node{
     private List<Node> listConditionalSinoSi;
     private Node conditionalSinoSi;
     private Node conditionalSino;
+    private boolean existSalir = false;
 
     public ConditionalSi(Node condition, List<Node> instructions, Node conditionalSinoSi, Node conditionalSino, PositionToken positionToken) {
         super(positionToken, null);
@@ -84,6 +91,175 @@ public class ConditionalSi extends Node{
     
     @Override
     public Object execute(Environment env) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        env.addNewAmbit();
+        Object valSi = condition.execute(env);
+        Object valSiT = null;
+        if (condition.getType() != DataType.BOOLEAN || valSi == null){
+            env.getErrorsSemantic().add(new ErrorGramm(condition.getPositionToken(), ErrorType.SEMANTIC, "", "La condicional es invalida"));
+            env.backAmbit();
+            return null;
+        }
+        valSiT = valSi;
+        if (condition instanceof Identifier) {
+            Symbol s = (Symbol) valSi;
+            valSiT = s.getValue();
+        }
+
+        if (valSiT == null) {
+            env.getErrorsSemantic().add(new ErrorGramm(condition.getPositionToken(),ErrorType.SEMANTIC, "Sumarizar", "El valor del parametro es nulo."));
+                return "";
+        }
+        
+        if ((boolean) valSiT) {
+            return executeSI(env);
+            
+        }else {
+            env.backAmbit();
+            return executeSINOSI(env);
+        }
+        
+        
+//        return null;
+    }
+    
+    public Object executeSI(Environment env){
+        for (int i = 0; i < instructions.size(); i++) {
+            if (instructions.get(i) instanceof NodeFinally) {
+                //Si es un nodo de finalizacion (salir, return, continue)
+                NodeFinally nodeFinally = (NodeFinally) instructions.get(i);
+                if (!isBelongFunc()) {
+                    if (nodeFinally.getNodeEndType() == NodeEndType.SALIR) {
+                        existSalir = true;
+                        env.backAmbit();
+                        return null;
+                    }
+                    env.backAmbit();
+                    env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, nodeFinally.getTypeString(), "Error de FLUJO DE CONTROL, no se permiten retornar dentro de procedimientos o continuar."));
+                    return null;
+                }else {
+                    if (nodeFinally.getNodeEndType() == NodeEndType.RETORNAR) {
+                        existSalir = true;
+                        setFlagRetorn(true);
+                        env.backAmbit();
+                        Object obj1 = nodeFinally.execute(env);
+                        setType(nodeFinally.getType());
+                        return obj1;
+                    }else{
+                        existSalir = true;
+                        env.backAmbit();
+                        return null;
+                    }
+                }
+            }else {
+                instructions.get(i).execute(env);
+            }
+        }
+        return null;
+    }
+    
+    public Object executeSINOSI(Environment env){
+        if (listConditionalSinoSi == null) {
+            return executeSINO(env);
+        }
+        for (int i = 0; i < listConditionalSinoSi.size(); i++) {
+            env.addNewAmbit();
+            Object valSi = listConditionalSinoSi.get(i).execute(env);
+            Object valSiT = null;
+            if (listConditionalSinoSi.get(i).getType() != DataType.BOOLEAN || valSi == null){
+                env.getErrorsSemantic().add(new ErrorGramm(listConditionalSinoSi.get(i).getPositionToken(), ErrorType.SEMANTIC, "", "La condicional es invalida"));
+                env.backAmbit();
+                return null;
+            }
+            valSiT = valSi;
+            if (condition instanceof Identifier) {
+                Symbol s = (Symbol) valSi;
+                valSiT = s.getValue();
+            }
+
+            if (valSiT == null) {
+                env.getErrorsSemantic().add(new ErrorGramm(listConditionalSinoSi.get(i).getPositionToken(),ErrorType.SEMANTIC, "Sumarizar", "El valor del parametro es nulo."));
+                    return "";
+            }
+            ConditionalSinoSi cond = (ConditionalSinoSi) listConditionalSinoSi.get(i);
+            if ((boolean) valSiT) {
+//                env.addNewAmbit();
+                for (int j = 0; j < cond.getInstructions().size(); j++) {
+                    if (cond.getInstructions().get(i) instanceof NodeFinally) {
+                        //Si es un nodo de finalizacion (salir, return, continue)
+                        NodeFinally nodeFinally = (NodeFinally) cond.getInstructions().get(j);
+                        if (!isBelongFunc()) {
+                            if (nodeFinally.getNodeEndType() == NodeEndType.SALIR) {
+                                existSalir = true;
+                                env.backAmbit();
+                                return null;
+                            }
+                            env.backAmbit();
+                            env.getErrorsSemantic().add(new ErrorGramm(cond.getInstructions().get(j).getPositionToken(),ErrorType.SEMANTIC, nodeFinally.getTypeString(), "Error de FLUJO DE CONTROL, no se permiten retornar dentro de procedimientos o continuar."));
+                            return null;
+                        }else {
+                            if (nodeFinally.getNodeEndType() == NodeEndType.RETORNAR) {
+                                existSalir = true;
+                                setFlagRetorn(true);
+                                env.backAmbit();
+                                Object obj1 = nodeFinally.execute(env);
+                                setType(nodeFinally.getType());
+                                return obj1;
+                            }else{
+                                existSalir = true;
+                                env.backAmbit();
+                                return null;
+                            }
+                        }
+                    }else {
+                        cond.getInstructions().get(j).execute(env);
+                    }
+                }
+                env.backAmbit();
+                return null;
+            }
+        }
+        return executeSINO(env);
+    }
+    
+    public Object executeSINO(Environment env){
+        if (conditionalSino == null) {
+            return null;
+        }
+        env.addNewAmbit();
+        
+        ConditionalSino cond = (ConditionalSino) conditionalSino;
+        for (int i = 0; i < cond.getInstructions().size(); i++) {
+            if (cond.getInstructions().get(i) instanceof NodeFinally) {
+                //Si es un nodo de finalizacion (salir, return, continue)
+                NodeFinally nodeFinally = (NodeFinally) cond.getInstructions().get(i);
+                if (!isBelongFunc()) {
+                    if (nodeFinally.getNodeEndType() == NodeEndType.SALIR) {
+                        existSalir = true;
+                        env.backAmbit();
+                        return null;
+                    }
+                    env.backAmbit();
+                    env.getErrorsSemantic().add(new ErrorGramm(cond.getInstructions().get(i).getPositionToken(),ErrorType.SEMANTIC, nodeFinally.getTypeString(), "Error de FLUJO DE CONTROL, no se permiten retornar dentro de procedimientos o continuar."));
+                    return null;
+                }else {
+                    if (nodeFinally.getNodeEndType() == NodeEndType.RETORNAR) {
+                        existSalir = true;
+                        setFlagRetorn(true);
+                        env.backAmbit();
+                        Object obj1 = nodeFinally.execute(env);
+                        setType(nodeFinally.getType());
+                        return obj1;
+                    }else{
+                        existSalir = true;
+                        env.backAmbit();
+                        return null;
+                    }
+                }
+            }else {
+                cond.getInstructions().get(i).execute(env);
+            }
+        }
+        env.backAmbit();
+        return null;
     }
 }

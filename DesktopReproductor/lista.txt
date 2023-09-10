@@ -1,0 +1,17 @@
+{
+	lista:
+	{
+		nombre: "fiesta",
+		pistas: [Pista1, Pista2]
+	},
+	lista:
+	{
+		nombre: "enfiesta2",
+		pistas: []
+	},	
+	lista:
+	{
+		nombre: "listaprueba",
+		pistas: [pista1, pista2, pista3]
+	}
+}

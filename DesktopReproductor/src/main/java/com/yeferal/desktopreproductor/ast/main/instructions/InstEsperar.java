@@ -5,6 +5,8 @@
  */
 package com.yeferal.desktopreproductor.ast.main.instructions;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.errors.ErrorType;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
 import com.yeferal.desktopreproductor.ast.main.Node;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
@@ -42,7 +44,32 @@ public class InstEsperar extends Node{
      
     @Override
     public Object execute(Environment env) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        setType(DataType.ENTERO);
+        Object intTime = value.execute(env);
+        Object intChanel = chanel.execute(env);
+        
+        if (intTime==null || intChanel==null) {
+            env.getErrorsSemantic().add(new ErrorGramm(value.getPositionToken(),ErrorType.SEMANTIC, "Esperar", "El valor del parametro es nulo."));
+            return "";
+        }
+        
+        if (value.getType() != DataType.ENTERO) {
+            env.getErrorsSyntact().add(new ErrorGramm(value.getPositionToken(),ErrorType.SYNTACTIC, "Esperar", "El valor del parametro TIEMPO ES INCORRECTO, solo se admiten enteros"));
+        }
+        
+        if (chanel.getType() != DataType.ENTERO) {
+            env.getErrorsSyntact().add(new ErrorGramm(chanel.getPositionToken(),ErrorType.SYNTACTIC, "Esperar", "El valor del parametro CANAL ES INCORRECTO, solo se admiten enteros"));
+        }
+        
+        ExeEsperar er = new ExeEsperar((int) intTime,(int) intChanel, env.getSynth());
+        env.getListExecutes().add(er);
+        if (env.active) {
+            Thread thread1 = new Thread(er);
+            thread1.start();
+//            er.execute();
+        }
+        
+        return intTime;
     } 
     
 }

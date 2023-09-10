@@ -91,8 +91,8 @@ public class OperationArithmetic extends Node{
             return null;
         }
         //Verifica que se pueda realizar la operaionc arithmetica
-        System.out.println(nodeLeft.getType() +" , "+ nodeRight.getType()+" , "+arithType);
-        System.out.println(converterDataType);
+//        System.out.println(nodeLeft.getType() +" , "+ nodeRight.getType()+" , "+arithType);
+//        System.out.println(converterDataType);
         if (!converterDataType.isConverterOpArith(nodeLeft.getType(), nodeRight.getType(), arithType)) {
             env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, getSign(), "No se puede realizar la operacion aritmetica porque los datos de la operacion no son valido."));
             return null;
@@ -122,7 +122,7 @@ public class OperationArithmetic extends Node{
         
         setType(converterDataType.getTypeData(nodeLeft.getType(), nodeRight.getType(), getArithType()));
         value = converterDataType.operateArith(valueLeft, valueRight, nodeLeft.getType(), nodeRight.getType(), arithType);
-        System.out.println("Valor Obtendio: "+value);
+//        System.out.println("Valor Obtendio: "+value);
         return value;
     }
     

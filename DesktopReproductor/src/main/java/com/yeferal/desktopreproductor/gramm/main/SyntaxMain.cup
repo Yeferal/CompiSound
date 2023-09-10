@@ -818,7 +818,7 @@ SENTENCIAS_CODIGO ::=	 SENTENCIAS_CODIGO:d COMENTARIOS {:List<Node> sentences = 
 						| {:List<Node> sentences = new ArrayList<>(); RESULT = sentences; :}
 						;
 
-STRUCT_RETORNAR ::=  retornar:m VALOR_CODICIONAL:a {:NodeFinally nodeReturn = new NodeFinally(NodeEndType.RETORNAR, (Node) a, new PositionToken(mright+1, mleft+1), null);:}
+STRUCT_RETORNAR ::=  retornar:m VALOR_CODICIONAL:a {:NodeFinally nodeReturn = new NodeFinally(NodeEndType.RETORNAR, (Node) a, new PositionToken(mright+1, mleft+1), null); RESULT = nodeReturn;:}
 					|retornar error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en el VALOR DE RETORNO, no es un valor aceptado");:}
 					;
 

@@ -6,17 +6,27 @@
 package com.yeferal.desktopreproductor.gui;
 
 import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.main.tree.Environment;
+import com.yeferal.desktopreproductor.ast.main.tree.PlayerSound;
 import com.yeferal.desktopreproductor.ast.main.tree.TraslatorMain;
 import com.yeferal.desktopreproductor.ast.main.tree.TreeMain;
 import com.yeferal.desktopreproductor.gramm.editor.LexicalAnalyzerPaint;
 import com.yeferal.desktopreproductor.gramm.editor.SyntaxAnalyzerCode;
+import com.yeferal.desktopreproductor.gramm.list.LexicalAnalyzerList;
+import com.yeferal.desktopreproductor.gramm.list.SyntaxAnalyzerList;
+import com.yeferal.desktopreproductor.gramm.list.TrackList;
 import com.yeferal.desktopreproductor.gramm.main.LexicalAnalyzerMain;
 import com.yeferal.desktopreproductor.gramm.main.SyntaxAnalyzerMain;
 import com.yeferal.desktopreproductor.gui.utils.LineasText;
+import com.yeferal.desktopreproductor.utils.filesadm.AllTrackList;
 import com.yeferal.desktopreproductor.utils.filesadm.FileAccess;
+import com.yeferal.desktopreproductor.utils.filesadm.ListaFile;
+import com.yeferal.desktopreproductor.utils.filesadm.PistaFile;
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -26,6 +36,23 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Utilities;
 import java.util.List;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.MidiUnavailableException;
+import javax.swing.DefaultListModel;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionListener;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
 
 /**
  *
@@ -33,11 +60,26 @@ import java.util.List;
  */
 public class MainWindow extends javax.swing.JFrame {
     
+    PlayerSound playerSound;
     public LineasText lines;
     private int posicionCursor;
     private FileAccess fileAccess = new FileAccess();
     private TreeMain treeMain = new TreeMain();
     private TraslatorMain traslatorMain = new TraslatorMain();
+    private String typeArchivo = "";
+    private String routeFileNow = null;
+    private String nameFile = null;
+    private int indexList = 0;
+    private boolean pistaSelected = false;
+    DefaultListModel<String> listModel = new DefaultListModel<>();
+    DefaultListModel<String> listModelList = new DefaultListModel<>();
+    DefaultListModel<String> listModelListPista = new DefaultListModel<>();
+    Environment envActual = null;
+    AllTrackList atl = new AllTrackList(new ArrayList<>());
+    ListaFile listFileActual = new ListaFile(new ArrayList<>());
+    boolean listaSelected = false;
+    int indexlistaSelected = 0;
+    XYSeries series = new XYSeries("");
 
     /**
      * Creates new form MainWindow
@@ -47,16 +89,68 @@ public class MainWindow extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setSize(1200, 700);
         lines =new LineasText();
+        
         panelCodePane.add(lines,BorderLayout.WEST);
         panelCodePane.add(lines.scrollPane,BorderLayout.CENTER);
-        tabbedPanelMain.setSelectedIndex(1);
+//        tabbedPanelMain.setSelectedIndex(1);
         setPositionPointer();
         lines.pane.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 paneCodeKeyReleased(evt);
             }
         });
-        readFileTest();
+//        readFileTest();
+        readFileTestList();
+        
+//        listTraks = new JList<>(listModel);
+        
+        updateListas();
+        updatePistas();
+        resetGraph();
+        
+        
+    }
+    
+    private XYSeriesCollection createDataset() {
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        
+        // Crea una serie de datos XY
+        series = new XYSeries("");
+        dataset.addSeries(series);
+        return dataset;
+    }
+    
+    private void resetGraph(){
+        XYSeriesCollection dataset = createDataset();
+        JFreeChart chart = createChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(panelGraphNow.getSize());
+        System.out.println("Pnale: "+panelGraphNow.getComponentCount());
+        if (panelGraphNow.getComponentCount()>0) {
+            panelGraphNow.removeAll();
+        }
+        panelGraphNow.add(chartPanel);
+        panelGraphNow.updateUI();
+        panelGraphNow.revalidate();
+        panelGraphNow.repaint();
+    }
+
+    private JFreeChart createChart(XYSeriesCollection dataset) {
+        JFreeChart chart = ChartFactory.createXYLineChart(
+            "",
+            "Seg",
+            "HZ",
+            dataset,
+            PlotOrientation.VERTICAL,
+            false,
+            false,
+            false
+        );
+
+        XYPlot plot = (XYPlot) chart.getPlot();
+        // Personaliza la apariencia del gráfico si es necesario
+
+        return chart;
     }
 
     
@@ -129,28 +223,109 @@ public class MainWindow extends javax.swing.JFrame {
         String text = fileAccess.readFile("pistasinerrores.txt");
         lines.pane.setText(text);
         paintText();
+        typeArchivo = "Pista";
     }
     
-    public void compile(){
+    public void readFileTestList(){
+        String text = fileAccess.readFile("lista.txt");
+        lines.pane.setText(text);
+        paintText();
+        typeArchivo = "Lista";
+    }
+    
+    public void readFile(String path){
+        String text = fileAccess.readFile(path);
+        lines.pane.setText(text);
+        paintText();
+        typeArchivo = "Pista";
+    }
+    
+    public void saveFile(Environment env){
+        int opcion = JOptionPane.showConfirmDialog(this, "Archivo compilado correctamente \t¿Deseas guardar la Pista?");
+        if (opcion == JOptionPane.YES_OPTION) {
+            JFileChooser fileChooser = new JFileChooser();
+            int seleccion = fileChooser.showSaveDialog(this);
+            if (seleccion == JFileChooser.APPROVE_OPTION) {
+                File archivoSeleccionado = fileChooser.getSelectedFile();
+                // Aquí puedes guardar el archivo en la ubicación seleccionada
+                if (typeArchivo.equals("Pista")) {
+//                    PistaFile pf = new PistaFile();
+                }
+                JOptionPane.showMessageDialog(this, "Archivo guardado en: " + archivoSeleccionado.getAbsolutePath());
+            }
+        }
+        
+    }
+    
+    public void saveFilePista(Environment env){
+        int opcion = JOptionPane.showConfirmDialog(this, "Archivo compilado correctamente \t¿Deseas guardar la Pista?");
+        if (opcion == JOptionPane.YES_OPTION) {
+            // Aquí puedes guardar el archivo en la ubicación seleccionada
+            if (typeArchivo.equals("Pista")) {
+                PistaFile pf = new PistaFile(env.nameTrac, lines.pane.getText(), env.nodeRoot);
+//                pf.setListExecutes(env.getListExecutes());
+                fileAccess.guardarClaseEnArchivoPista(pf, "data/pistas/"+env.nameTrac);
+                JOptionPane.showMessageDialog(this, "Archivo guardado en: " + "/data/pistas");
+            }else if (typeArchivo.equals("Lista")) {
+                PistaFile pf = new PistaFile(env.nameTrac, lines.pane.getText(), env.nodeRoot);
+                fileAccess.guardarClaseEnArchivoPista(pf, "data/listas/"+env.nameTrac);
+                JOptionPane.showMessageDialog(this, "Archivo guardado en: " + "/data/pistas");
+            }
+        }
+        updatePistas();
+    }
+    
+    public void saveFileList(List<TrackList> list){
+        int opcion = JOptionPane.showConfirmDialog(this, "Archivo compilado correctamente \t¿Deseas guardar la Pista?");
+        if (opcion == JOptionPane.YES_OPTION) {
+            ListaFile lf = new ListaFile(list);
+            fileAccess.guardarClaseEnArchivoLista(lf, "data/alllistas");
+            JOptionPane.showMessageDialog(this, "Archivo guardado en: " + "/data/pistas");
+        }
+        updateListas();
+    }
+    
+    public void saveFileOnAllPist(Environment env){
+        int opcion = JOptionPane.showConfirmDialog(this, "Desea guardar la ultima pista compilada \t¿Deseas guardar la Pista?");
+        if (opcion == JOptionPane.YES_OPTION) {
+            // Aquí puedes guardar el archivo en la ubicación seleccionada
+            PistaFile pf = new PistaFile(env.nameTrac, lines.pane.getText(), env.nodeRoot);
+            atl.addPista(pf);
+            fileAccess.guardarClaseEnArchivoAllPista(atl, "data/allpistas");
+            JOptionPane.showMessageDialog(this, "Pista Agregada O Guardada ");
+        }
+        updatePistas();
+    }
+    
+    public void compile() throws MidiUnavailableException{
         String txt = lines.pane.getText();
         LexicalAnalyzerMain lexicalAnalyzerMain = new LexicalAnalyzerMain(new StringReader(txt));
         SyntaxAnalyzerMain syntaxAnalyzerMain = new SyntaxAnalyzerMain(lexicalAnalyzerMain);
-        
+        Environment env = new Environment();
+        env.textPane = textPaneConsole;
         try {
             syntaxAnalyzerMain.parse();
             List<ErrorGramm> lexicalErrors = lexicalAnalyzerMain.getLexicalErrors();
             List<ErrorGramm> syntaxErrors = syntaxAnalyzerMain.getSyntaxErrors();
+            env.setErrorsLexical(lexicalErrors);
+            env.setErrorsSyntact(syntaxErrors);
             if (lexicalErrors.size()==0 && syntaxErrors.size()==0) {
                 treeMain.setListTrack(syntaxAnalyzerMain.getListTracks());
-                traslatorMain.initMain(treeMain.getListTrack());
-            }else {
-                for (ErrorGramm syntaxError : syntaxErrors) {
-                    System.out.println(syntaxError.getStringError());
+                env = traslatorMain.initMain(treeMain.getListTrack());
+                if (env.getErrorsLexical().size()>0 || env.getErrorsSyntact().size()>0 || env.getErrorsSemantic().size()>0) {
+                    env.paintConsoleErros();
+                }else {
+                    envActual = env;
+                    saveFilePista(env);
                 }
+            }else {
+                env.paintConsoleErros();
             }
         } catch (Exception e) {
             System.out.println("Error");
             e.printStackTrace();
+            env.paintConsoleErros();
+            
             List<ErrorGramm> lexicalErrors = lexicalAnalyzerMain.getLexicalErrors();
             List<ErrorGramm> syntaxErrors = syntaxAnalyzerMain.getSyntaxErrors();
             for (ErrorGramm lexicalError : lexicalErrors) {
@@ -159,7 +334,106 @@ public class MainWindow extends javax.swing.JFrame {
             for (ErrorGramm syntaxError : syntaxErrors) {
                 System.out.println(syntaxError.getStringError());
             }
+            
         }
+    }
+    
+    public void paintConsoleErros(List<ErrorGramm> errorsLexical, List<ErrorGramm> errorsSyntact, List<ErrorGramm> errorsSemantic){
+        StringBuilder txt = new StringBuilder();
+        for (ErrorGramm errorGramm : errorsLexical) {
+            txt.append(errorGramm.getStringError()).append("\n");
+        }
+        
+        for (ErrorGramm errorGramm : errorsSyntact) {
+            txt.append(errorGramm.getStringError()).append("\n");
+        }
+        
+        for (ErrorGramm errorGramm : errorsSemantic) {
+            txt.append(errorGramm.getStringError()).append("\n");
+        }
+        textPaneConsole.setText(txt.toString());
+    }
+    
+    public void compileList() throws MidiUnavailableException{
+        String txt = lines.pane.getText();
+        LexicalAnalyzerList lexicalAnalyzerList = new LexicalAnalyzerList(new StringReader(txt));
+        SyntaxAnalyzerList syntaxAnalyzerList = new SyntaxAnalyzerList(lexicalAnalyzerList);
+        try {
+            syntaxAnalyzerList.parse();
+            List<ErrorGramm> lexicalErrors = lexicalAnalyzerList.getLexicalErrors();
+            List<ErrorGramm> syntaxErrors = syntaxAnalyzerList.getSyntaxErrors();
+            if (lexicalErrors.size()==0 && syntaxErrors.size()==0) {
+                for (int i = 0; i < syntaxAnalyzerList.getListTracks().size(); i++) {
+                    syntaxAnalyzerList.getListTracks().get(i).setTxt(txt);
+                }
+                listFileActual = new ListaFile(syntaxAnalyzerList.getListTracks());
+                saveFileList(syntaxAnalyzerList.getListTracks());
+            }else {
+                paintConsoleErros(lexicalErrors, syntaxErrors, new ArrayList<>());
+            }
+        } catch (Exception e) {
+            System.out.println("Error");
+            e.printStackTrace();
+            
+            List<ErrorGramm> lexicalErrors = lexicalAnalyzerList.getLexicalErrors();
+            List<ErrorGramm> syntaxErrors = syntaxAnalyzerList.getSyntaxErrors();
+            paintConsoleErros(lexicalErrors, syntaxErrors, new ArrayList<>());
+            
+        }
+    }
+    
+    public void setInfoFile(){
+        if (typeArchivo != null) {
+            if (typeArchivo.equals("Pista")) {
+                labelInfoFile.setText("Pista: "+"Untitled-1");
+            }else if (typeArchivo.equals("Lista")) {
+                labelInfoFile.setText("Lista: "+"Untitled-1");
+            }
+        }
+    }
+    
+    public void updateListas(){
+        ListaFile lf = fileAccess.cargarClaseDesdeArchivoLista("data/alllistas");
+        listFileActual = lf;
+        listModelList.clear();
+        for (int i = 0; i < lf.getList().size() ; i++) {
+            if (lf.getList().get(i) != null) {
+                System.out.println(lf.getList().get(i).getName()+" => "+lf.getList().get(i).getListTracks().toString());
+                listModelList.addElement(lf.getList().get(i).getName());
+            }
+        }
+        jList3.updateUI();
+        jList3.revalidate();
+        jList3.repaint();
+    }
+    
+    public void updatePistas(){
+        AllTrackList listList = fileAccess.cargarClaseDesdeArchivoAllPista("data/allpistas");
+        System.out.println("Listado: "+listList.getList().size());
+        atl = listList;
+        listModel.clear();
+        for (int i = 0; i < atl.getList().size() ; i++) {
+            System.out.println(atl.getList().get(i).getName());
+            listModel.addElement(atl.getList().get(i).getName());
+        }
+        listTraks.updateUI();
+        listTraks.revalidate();
+        listTraks.repaint();
+    }
+    
+    public void setPistaLista(int index){
+        listModelListPista.clear();
+        System.out.println("Tam: "+listFileActual.getList().size()+" > "+index);
+        if (index>0 && listFileActual.getList().size()>index) {
+            for (String listTrack : listFileActual.getList().get(index).getListTracks()) {
+                for (int i = 0; i < atl.getList().size(); i++) {
+                    if (listTrack.equals(atl.getList().get(i).getName())) {
+                        listModelListPista.addElement(listTrack);
+                    }
+                }
+            }
+        }
+        
     }
     
     @SuppressWarnings("unchecked")
@@ -203,16 +477,12 @@ public class MainWindow extends javax.swing.JFrame {
         buttonCompile = new javax.swing.JButton();
         buttonPlayTrankCode = new javax.swing.JButton();
         panelCodePane = new javax.swing.JPanel();
+        labelInfoFile = new javax.swing.JLabel();
         panelReproductor = new javax.swing.JPanel();
         PanelRight = new javax.swing.JPanel();
         panelGraph = new javax.swing.JPanel();
-        panelInfoFreq = new javax.swing.JPanel();
-        labelTopHz = new javax.swing.JLabel();
-        labelButtonHz = new javax.swing.JLabel();
         panelGraphFreq = new javax.swing.JPanel();
         panelGraphNow = new javax.swing.JPanel();
-        labelSegLeft = new javax.swing.JLabel();
-        labelSegRight = new javax.swing.JLabel();
         panelControl = new javax.swing.JPanel();
         panelTime = new javax.swing.JPanel();
         panelTimeLeft = new javax.swing.JPanel();
@@ -232,16 +502,16 @@ public class MainWindow extends javax.swing.JFrame {
         menuBar = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem7 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
+        menuItemCrearPista = new javax.swing.JMenuItem();
+        menuItemModificarPista = new javax.swing.JMenuItem();
+        menuItemEliminarPista = new javax.swing.JMenuItem();
+        menuItemGuardarPista = new javax.swing.JMenuItem();
+        menuItemRecuperarPista = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        menuItemNuevaPista = new javax.swing.JMenuItem();
+        menuItemGuardarListaRep = new javax.swing.JMenuItem();
+        menuItemRecuperarListaRep = new javax.swing.JMenuItem();
+        menuItemNuevoArchivo = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenu3 = new javax.swing.JMenu();
 
@@ -272,14 +542,20 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel1.setText("Canciones");
 
-        listTraks.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        listTraks.setModel(listModel);
+        listTraks.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                listTraksValueChanged(evt);
+            }
         });
         scrollPaneTraks.setViewportView(listTraks);
 
         buttonCreate.setText("Crear");
+        buttonCreate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCreateActionPerformed(evt);
+            }
+        });
 
         buttonEdit.setText("Editar");
         buttonEdit.addActionListener(new java.awt.event.ActionListener() {
@@ -289,8 +565,18 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         buttonDelete.setText("Eliminar");
+        buttonDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDeleteActionPerformed(evt);
+            }
+        });
 
         buttonPlay.setText("Reproducir");
+        buttonPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPlayActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelTracksLayout = new javax.swing.GroupLayout(panelTracks);
         panelTracks.setLayout(panelTracksLayout);
@@ -346,11 +632,17 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         buttonDeletList.setText("Eliminar");
+        buttonDeletList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonDeletListActionPerformed(evt);
+            }
+        });
 
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        jList2.setModel(listModelListPista);
+        jList2.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList2ValueChanged(evt);
+            }
         });
         scrollPaneListPlayer.setViewportView(jList2);
 
@@ -388,10 +680,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         labelListsPlayers.setText("Listas de Reproduccion");
 
-        jList3.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        jList3.setModel(listModelList);
+        jList3.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jList3ValueChanged(evt);
+            }
         });
         scrollPaneListsPlayers.setViewportView(jList3);
 
@@ -467,8 +760,16 @@ public class MainWindow extends javax.swing.JFrame {
         });
 
         buttonPlayTrankCode.setText("Reproducir Pista");
+        buttonPlayTrankCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonPlayTrankCodeActionPerformed(evt);
+            }
+        });
 
         panelCodePane.setLayout(new java.awt.BorderLayout());
+
+        labelInfoFile.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        labelInfoFile.setText("jLabel2");
 
         javax.swing.GroupLayout panelEditorCodeLayout = new javax.swing.GroupLayout(panelEditorCode);
         panelEditorCode.setLayout(panelEditorCodeLayout);
@@ -486,7 +787,9 @@ public class MainWindow extends javax.swing.JFrame {
                         .addComponent(labelColumn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelColumnInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelInfoFile, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(buttonPlayTrankCode)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(buttonCompile, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -496,7 +799,7 @@ public class MainWindow extends javax.swing.JFrame {
             panelEditorCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEditorCodeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelCodePane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelCodePane, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelEditorCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelFila)
@@ -504,7 +807,8 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(buttonPlayTrankCode)
                     .addComponent(labelFilaInfo)
                     .addComponent(labelColumn)
-                    .addComponent(labelColumnInfo))
+                    .addComponent(labelColumnInfo)
+                    .addComponent(labelInfoFile, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -522,55 +826,10 @@ public class MainWindow extends javax.swing.JFrame {
         panelGraph.setOpaque(false);
         panelGraph.setLayout(new java.awt.BorderLayout());
 
-        panelInfoFreq.setOpaque(false);
-
-        labelTopHz.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelTopHz.setText("4000 HZ");
-
-        labelButtonHz.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelButtonHz.setText("0 HZ");
-
-        javax.swing.GroupLayout panelInfoFreqLayout = new javax.swing.GroupLayout(panelInfoFreq);
-        panelInfoFreq.setLayout(panelInfoFreqLayout);
-        panelInfoFreqLayout.setHorizontalGroup(
-            panelInfoFreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(labelButtonHz, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelInfoFreqLayout.createSequentialGroup()
-                .addGap(0, 28, Short.MAX_VALUE)
-                .addComponent(labelTopHz, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        panelInfoFreqLayout.setVerticalGroup(
-            panelInfoFreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelInfoFreqLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelTopHz)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 208, Short.MAX_VALUE)
-                .addComponent(labelButtonHz, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        panelGraph.add(panelInfoFreq, java.awt.BorderLayout.LINE_START);
-
         panelGraphFreq.setOpaque(false);
 
         panelGraphNow.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout panelGraphNowLayout = new javax.swing.GroupLayout(panelGraphNow);
-        panelGraphNow.setLayout(panelGraphNowLayout);
-        panelGraphNowLayout.setHorizontalGroup(
-            panelGraphNowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        panelGraphNowLayout.setVerticalGroup(
-            panelGraphNowLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 255, Short.MAX_VALUE)
-        );
-
-        labelSegLeft.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        labelSegLeft.setText("60 seg");
-
-        labelSegRight.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        labelSegRight.setText("0 seg");
+        panelGraphNow.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout panelGraphFreqLayout = new javax.swing.GroupLayout(panelGraphFreq);
         panelGraphFreq.setLayout(panelGraphFreqLayout);
@@ -578,23 +837,14 @@ public class MainWindow extends javax.swing.JFrame {
             panelGraphFreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGraphFreqLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelGraphFreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelGraphNow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(panelGraphFreqLayout.createSequentialGroup()
-                        .addComponent(labelSegLeft, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 358, Short.MAX_VALUE)
-                        .addComponent(labelSegRight, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addComponent(panelGraphNow, javax.swing.GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panelGraphFreqLayout.setVerticalGroup(
             panelGraphFreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelGraphFreqLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelGraphNow, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelGraphFreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelSegLeft)
-                    .addComponent(labelSegRight))
+                .addComponent(panelGraphNow, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -746,6 +996,11 @@ public class MainWindow extends javax.swing.JFrame {
         buttonControlStop.setIcon(new javax.swing.ImageIcon("C:\\Users\\Usuario\\Desktop\\Compi2\\projects\\Project1\\CompiSound\\DesktopReproductor\\src\\main\\java\\com\\yeferal\\desktopreproductor\\gui\\picture\\buttonStop.png")); // NOI18N
         buttonControlStop.setToolTipText("");
         buttonControlStop.setBorder(null);
+        buttonControlStop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonControlStopActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelButtonRightLayout = new javax.swing.GroupLayout(panelButtonRight);
         panelButtonRight.setLayout(panelButtonRightLayout);
@@ -797,43 +1052,68 @@ public class MainWindow extends javax.swing.JFrame {
 
         jMenu4.setText("Pista");
 
-        jMenuItem3.setText("Crear Pista");
-        jMenu4.add(jMenuItem3);
+        menuItemCrearPista.setText("Crear Pista");
+        menuItemCrearPista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemCrearPistaActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuItemCrearPista);
 
-        jMenuItem4.setText("Modificar Pista");
-        jMenu4.add(jMenuItem4);
+        menuItemModificarPista.setText("Modificar Pista");
+        menuItemModificarPista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemModificarPistaActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuItemModificarPista);
 
-        jMenuItem5.setText("Eliminar Pista");
-        jMenu4.add(jMenuItem5);
+        menuItemEliminarPista.setText("Eliminar Pista");
+        menuItemEliminarPista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemEliminarPistaActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuItemEliminarPista);
 
-        jMenuItem7.setText("Guardar Pista");
-        jMenu4.add(jMenuItem7);
+        menuItemGuardarPista.setText("Guardar Pista");
+        menuItemGuardarPista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemGuardarPistaActionPerformed(evt);
+            }
+        });
+        jMenu4.add(menuItemGuardarPista);
 
-        jMenuItem6.setText("Recuperar Pista");
-        jMenu4.add(jMenuItem6);
+        menuItemRecuperarPista.setText("Recuperar Pista");
+        jMenu4.add(menuItemRecuperarPista);
 
         jMenu1.add(jMenu4);
 
         jMenu5.setText("Lista");
 
-        jMenuItem8.setText("Guardar Lista de Reproduccion");
-        jMenu5.add(jMenuItem8);
+        menuItemNuevaPista.setText("Nueva Lista");
+        menuItemNuevaPista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemNuevaPistaActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuItemNuevaPista);
 
-        jMenuItem9.setText("Recuperar Lista de Reproduccion");
-        jMenu5.add(jMenuItem9);
+        menuItemGuardarListaRep.setText("Guardar Lista de Reproduccion");
+        menuItemGuardarListaRep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemGuardarListaRepActionPerformed(evt);
+            }
+        });
+        jMenu5.add(menuItemGuardarListaRep);
+
+        menuItemRecuperarListaRep.setText("Recuperar Lista de Reproduccion");
+        jMenu5.add(menuItemRecuperarListaRep);
 
         jMenu1.add(jMenu5);
 
-        jMenuItem1.setText("Nueva Pista");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setText("Nuevo Archivo");
-        jMenu1.add(jMenuItem2);
+        menuItemNuevoArchivo.setText("Servir Pista");
+        jMenu1.add(menuItemNuevoArchivo);
 
         menuBar.add(jMenu1);
 
@@ -859,30 +1139,296 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void menuItemNuevaPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemNuevaPistaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+        typeArchivo = "Lista";
+        if (panelCodePane.getComponents().length==0) {
+            panelCodePane.add(lines,BorderLayout.WEST);
+            panelCodePane.add(lines.scrollPane,BorderLayout.CENTER);
+        }
+        lines.pane.setText("");
+        setInfoFile();
+        
+    }//GEN-LAST:event_menuItemNuevaPistaActionPerformed
 
     private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
         // TODO add your handling code here:
+        if (pistaSelected && nameFile!=null) {
+//            PistaFile pf = fileAccess.cargarClaseDesdeArchivoPista("data/pistas/"+nameFile);
+            PistaFile pf = atl.getList().get(indexList);
+            lines.pane.setText(pf.getInputText());
+            paintText();
+            typeArchivo = "Pista";
+            tabbedPanelMain.setSelectedIndex(1);
+        }
+        
+        //BUSCA EL INDEX DE LA PISTA
+        //Busca la data de la misma
+        //SETEA Y ENVIA AL EDITOR
     }//GEN-LAST:event_buttonEditActionPerformed
 
     private void buttonEditListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditListActionPerformed
         // TODO add your handling code here:
+        if (listFileActual!=null && nameFile!=null && nameFile.equals("Lista")) {
+//            PistaFile pf = fileAccess.cargarClaseDesdeArchivoPista("data/pistas/"+nameFile);
+            TrackList trl = listFileActual.getList().get(indexList);
+            lines.pane.setText(trl.getTxt());
+            paintText();
+            typeArchivo = "Lista";
+            tabbedPanelMain.setSelectedIndex(1);
+        }
     }//GEN-LAST:event_buttonEditListActionPerformed
 
     private void buttonControlPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonControlPlayActionPerformed
         // TODO add your handling code here:
+        if (pistaSelected && nameFile!=null) {
+            try {
+                if (playerSound!=null && playerSound.isAlive()) {
+                    playerSound.reanude();
+                } else {
+                    PistaFile pf = atl.getList().get(indexList);
+                    Environment envTemp = new Environment();
+                    resetGraph();
+                    envTemp.setSeries(series);
+                    envTemp.active = true;
+    //                traslatorMain.initMainEnv(pf.getNodeRoot(), envTemp);
+                    playerSound = new PlayerSound(envTemp, pf.getNodeRoot());
+
+                    playerSound.start();
+                }
+                
+            } catch (MidiUnavailableException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_buttonControlPlayActionPerformed
 
     private void buttonControlPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonControlPauseActionPerformed
         // TODO add your handling code here:
+        if (playerSound != null) {
+            if (playerSound.isAlive()) {
+                System.out.println("El hilo está en ejecución.");
+                playerSound.pause();
+            } else {
+                System.out.println("El hilo no está en ejecución.");
+                playerSound.reanude();
+            }
+        }
+        
     }//GEN-LAST:event_buttonControlPauseActionPerformed
 
     private void buttonCompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCompileActionPerformed
-        // TODO add your handling code here:
-        compile();
+        try {
+            // TODO add your handling code here:
+            if (typeArchivo.equals("Pista")) {
+                compile();
+            }else if(typeArchivo.equals("Lista")) {
+                compileList();
+            }
+        } catch (MidiUnavailableException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_buttonCompileActionPerformed
+
+    private void menuItemCrearPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemCrearPistaActionPerformed
+        // TODO add your handling code here:
+        typeArchivo = "Pista";
+        System.out.println("panelCodePane.getComponents().length: "+panelCodePane.getComponents().length);
+        if (panelCodePane.getComponents().length==0) {
+            panelCodePane.add(lines,BorderLayout.WEST);
+            panelCodePane.add(lines.scrollPane,BorderLayout.CENTER);
+        }
+        lines.pane.setText("");
+        System.out.println("panelCodePane.getComponents().length: "+panelCodePane.getComponents().length);
+        setInfoFile();
+        
+        //Si se esta reproduciendo algo detenerlo
+        
+        
+    }//GEN-LAST:event_menuItemCrearPistaActionPerformed
+
+    private void buttonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCreateActionPerformed
+        // TODO add your handling code here:
+        typeArchivo = "Pista";
+        System.out.println("panelCodePane.getComponents().length: "+panelCodePane.getComponents().length);
+        if (panelCodePane.getComponents().length==0) {
+            panelCodePane.add(lines,BorderLayout.WEST);
+            panelCodePane.add(lines.scrollPane,BorderLayout.CENTER);
+        }
+        lines.pane.setText("");
+        System.out.println("panelCodePane.getComponents().length: "+panelCodePane.getComponents().length);
+        setInfoFile();
+        tabbedPanelMain.setSelectedIndex(1);
+    }//GEN-LAST:event_buttonCreateActionPerformed
+
+    private void listTraksValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_listTraksValueChanged
+        // TODO add your handling code here:
+        if (!evt.getValueIsAdjusting()) {
+            // Obtener el elemento seleccionado
+            String elementoSeleccionado = listTraks.getSelectedValue();
+            nameFile = elementoSeleccionado;
+            pistaSelected = true;
+            indexList = listTraks.getSelectedIndex();
+            // Realizar la acción deseada con el elemento seleccionado
+            System.out.println("Elemento seleccionado: " + elementoSeleccionado+", Index: "+listTraks.getSelectedIndex());
+            // Agrega aquí tu acción específica
+        }
+    }//GEN-LAST:event_listTraksValueChanged
+
+    private void jList2ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList2ValueChanged
+        // TODO add your handling code here:
+        if (!evt.getValueIsAdjusting()) {
+            // Obtener el elemento seleccionado
+            String elementoSeleccionado = jList2.getSelectedValue();
+            nameFile = elementoSeleccionado;
+            listaSelected = true;
+            pistaSelected = true;
+            indexList = listTraks.getSelectedIndex();
+            for (int i = 0; i < atl.getList().size(); i++) {
+                if (atl.getList().get(i).getName().equals(nameFile)) {
+                    indexList = i;
+                    break;
+                }
+            }
+            // Realizar la acción deseada con el elemento seleccionado
+            System.out.println("Elemento seleccionado: " + elementoSeleccionado);
+            
+            
+            
+            // Agrega aquí tu acción específica
+        }
+    }//GEN-LAST:event_jList2ValueChanged
+
+    private void jList3ValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jList3ValueChanged
+        // TODO add your handling code here:
+        if (!evt.getValueIsAdjusting()) {
+            // Obtener el elemento seleccionado
+            String elementoSeleccionado = jList3.getSelectedValue();
+            nameFile = elementoSeleccionado;
+            pistaSelected = true;
+            indexList = jList3.getSelectedIndex();
+            // Realizar la acción deseada con el elemento seleccionado
+            
+            setPistaLista(indexList);
+            
+            System.out.println("Elemento seleccionado: " + elementoSeleccionado+", index: "+jList3.getSelectedIndex());
+            // Agrega aquí tu acción específica
+        }
+    }//GEN-LAST:event_jList3ValueChanged
+
+    private void buttonPlayTrankCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPlayTrankCodeActionPerformed
+        // TODO add your handling code here:
+        if (envActual!=null) {
+            try {
+                envActual.setSynth(MidiSystem.getSynthesizer());
+                envActual.getTh().run();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+        }
+    }//GEN-LAST:event_buttonPlayTrankCodeActionPerformed
+
+    private void buttonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonPlayActionPerformed
+        // TODO add your handling code here:
+        if (pistaSelected && nameFile!=null) {
+            try {
+                if (playerSound != null && playerSound.isAlive()) {
+                    playerSound.reanude();
+                } else {
+                    PistaFile pf = atl.getList().get(indexList);
+                    Environment envTemp = new Environment();
+                    resetGraph();
+                    envTemp.setSeries(series);
+                    envTemp.active = true;
+    //                traslatorMain.initMainEnv(pf.getNodeRoot(), envTemp);
+                    playerSound = new PlayerSound(envTemp, pf.getNodeRoot());
+
+                    playerSound.start();
+                }
+                
+            } catch (MidiUnavailableException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_buttonPlayActionPerformed
+
+    private void buttonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteActionPerformed
+        // TODO add your handling code here:
+        if (pistaSelected && nameFile!=null) {
+            fileAccess.deleteFile("data/pistas/"+nameFile);
+            atl.getList().remove(indexList);
+            fileAccess.guardarClaseEnArchivoAllPista(atl, "data/allpistas");
+            updatePistas();
+        }else if (!listaSelected && nameFile!=null) {
+//            listFileActual.getList().remove(indexList);
+//            fileAccess.guardarClaseEnArchivoLista(listFileActual, "data/alllistas");
+//            updateListas();
+        }
+        
+    }//GEN-LAST:event_buttonDeleteActionPerformed
+
+    private void menuItemModificarPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemModificarPistaActionPerformed
+        // TODO add your handling code here:
+        if (pistaSelected && nameFile!=null) {
+//            PistaFile pf = fileAccess.cargarClaseDesdeArchivoPista("data/pistas/"+nameFile);
+            PistaFile pf = atl.getList().get(indexList);
+            lines.pane.setText(pf.getInputText());
+            paintText();
+            typeArchivo = "Pista";
+            tabbedPanelMain.setSelectedIndex(1);
+        }
+    }//GEN-LAST:event_menuItemModificarPistaActionPerformed
+
+    private void menuItemEliminarPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemEliminarPistaActionPerformed
+        // TODO add your handling code here:
+        if (pistaSelected && nameFile!=null) {
+            fileAccess.deleteFile("data/pistas/"+nameFile);
+            atl.getList().remove(indexList);
+            updatePistas();
+            JOptionPane.showMessageDialog(this, "Pista eliminado ");
+        }else if (!pistaSelected && nameFile!=null) {
+            fileAccess.deleteFile("data/listas/"+nameFile);
+            updateListas();
+            JOptionPane.showMessageDialog(this, "Lista eliminada");
+        }
+    }//GEN-LAST:event_menuItemEliminarPistaActionPerformed
+
+    private void menuItemGuardarPistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGuardarPistaActionPerformed
+        // TODO add your handling code here:
+        if (envActual!=null) {
+            saveFileOnAllPist(envActual);
+        }
+        
+    }//GEN-LAST:event_menuItemGuardarPistaActionPerformed
+
+    private void buttonControlStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonControlStopActionPerformed
+        // TODO add your handling code here:
+        if (playerSound!=null) {
+            playerSound.kill();
+        }
+    }//GEN-LAST:event_buttonControlStopActionPerformed
+
+    private void menuItemGuardarListaRepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGuardarListaRepActionPerformed
+        // TODO add your handling code here:
+        if(typeArchivo.equals("Lista")) {
+            try {
+                compileList();
+            } catch (MidiUnavailableException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        updateListas();
+    }//GEN-LAST:event_menuItemGuardarListaRepActionPerformed
+
+    private void buttonDeletListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeletListActionPerformed
+        // TODO add your handling code here:
+        if (!listaSelected && nameFile!=null) {
+            listFileActual.getList().remove(indexList);
+            fileAccess.guardarClaseEnArchivoLista(listFileActual, "data/alllistas");
+            updateListas();
+        }
+    }//GEN-LAST:event_buttonDeletListActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -907,30 +1453,27 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
-    private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
-    private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JLabel labelButtonHz;
     private javax.swing.JLabel labelColumn;
     private javax.swing.JLabel labelColumnInfo;
     private javax.swing.JLabel labelFila;
     private javax.swing.JLabel labelFilaInfo;
+    private javax.swing.JLabel labelInfoFile;
     private javax.swing.JLabel labelListPlayer;
     private javax.swing.JLabel labelListsPlayers;
-    private javax.swing.JLabel labelSegLeft;
-    private javax.swing.JLabel labelSegRight;
     private javax.swing.JLabel labelTimeEnd;
     private javax.swing.JLabel labelTimeNow;
-    private javax.swing.JLabel labelTopHz;
     private javax.swing.JList<String> listTraks;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem menuItemCrearPista;
+    private javax.swing.JMenuItem menuItemEliminarPista;
+    private javax.swing.JMenuItem menuItemGuardarListaRep;
+    private javax.swing.JMenuItem menuItemGuardarPista;
+    private javax.swing.JMenuItem menuItemModificarPista;
+    private javax.swing.JMenuItem menuItemNuevaPista;
+    private javax.swing.JMenuItem menuItemNuevoArchivo;
+    private javax.swing.JMenuItem menuItemRecuperarListaRep;
+    private javax.swing.JMenuItem menuItemRecuperarPista;
     private javax.swing.JPanel paneListsPlayer;
     private javax.swing.JPanel panelButtonCenter;
     private javax.swing.JPanel panelButtonLeft;
@@ -946,7 +1489,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel panelGraph;
     private javax.swing.JPanel panelGraphFreq;
     private javax.swing.JPanel panelGraphNow;
-    private javax.swing.JPanel panelInfoFreq;
     private javax.swing.JPanel panelLeft;
     private javax.swing.JPanel panelLibrary;
     private javax.swing.JPanel panelListPlayer;

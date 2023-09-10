@@ -70,7 +70,7 @@ public class CallArreglo extends Node{
     @Override
     public Object execute(Environment env) {
         //Buscamos la funcion si existe
-        Symbol symbol = env.getTableSymbol().searchSymbolFunction(id, env.currentAmbit);
+        Symbol symbol = env.getTableSymbol().searchSymbolArreglo(id, env.currentAmbit);
         if (symbol == null) {
             env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, id, "No sea a declarado un arreglo con el nombre "+id+"."));
             return null;
@@ -100,8 +100,34 @@ public class CallArreglo extends Node{
         }
         //Obtener el dato de la variable[]...
         setType(symbol.getType());
-        Object data = symbol.searchValueArray(env, tempDims, 0);
+        int position = calculatedDirStack(env, symbol.getListDim(), tempDims);
+        Object data = symbol.searchValueArrayFromPosition(env, position);
         
         return data;
+    }
+    
+    int calculatedDirStack(Environment env, List<Integer> tamanosDimensiones, List<Integer> coordenadas) {
+        if (tamanosDimensiones.size() != coordenadas.size()) {
+            env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, getId(), "Los valores de las coordenadas superan las dimensiones del arreglo."));
+            return 0;
+        }
+
+        int direccion = 0;
+        int multiplicador = 1; // Inicializar el multiplicador en 1
+
+        for (int i = tamanosDimensiones.size() - 1; i >= 0; i--) {
+            int tamañoDimension = tamanosDimensiones.get(i);
+            int coordenada = coordenadas.get(i);
+
+            if (coordenada < 0 || coordenada >= tamañoDimension) {
+                env.getErrorsSemantic().add(new ErrorGramm(getPositionToken(),ErrorType.SEMANTIC, getId(), "Las Coordenadas superan la dimension del arreglo."));
+                return 0;
+            }
+
+            direccion += coordenada * multiplicador; // Sumar el producto de coordenada y multiplicador
+            multiplicador *= tamañoDimension; // Actualizar el multiplicador para la siguiente dimensión
+        }
+
+        return direccion;
     }
 }

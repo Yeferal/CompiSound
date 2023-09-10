@@ -80,6 +80,7 @@ public class OperationLogical extends Node{
     @Override
     public Object execute(Environment env) {
         //Hace las verificaciones, tipo de dato y tipo de asignacion
+        setType(DataType.BOOLEAN);
         if (nodeRight == null && logicalTypes == LogicalTypes.NOT) {
             Object val1 = nodeLeft.execute(env);
             if (val1 == null) {
@@ -145,7 +146,7 @@ public class OperationLogical extends Node{
             value = ro.runOpLogical(valueLeft, valueRight, DataType.BOOLEAN, DataType.BOOLEAN, logicalTypes);
         }
         setType(DataType.BOOLEAN);
-        System.out.println("Valor Obtendio: "+value);
+//        System.out.println("Valor Obtendio: "+value);
         return value;
     }
 }

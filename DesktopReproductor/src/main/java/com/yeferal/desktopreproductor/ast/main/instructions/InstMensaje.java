@@ -5,9 +5,13 @@
  */
 package com.yeferal.desktopreproductor.ast.main.instructions;
 
+import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.errors.ErrorType;
 import com.yeferal.desktopreproductor.ast.errors.PositionToken;
+import com.yeferal.desktopreproductor.ast.main.Identifier;
 import com.yeferal.desktopreproductor.ast.main.Node;
 import com.yeferal.desktopreproductor.ast.main.tablesymbol.DataType;
+import com.yeferal.desktopreproductor.ast.main.tablesymbol.Symbol;
 import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 
 /**
@@ -32,6 +36,17 @@ public class InstMensaje extends Node{
     
     @Override
     public Object execute(Environment env) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Object valAsignation = value.execute(env);
+        Object valAsigT = valAsignation;
+        if (value instanceof Identifier) {
+            Symbol s = (Symbol) valAsignation;
+            valAsigT = s.getValue();
+        }
+        
+        System.out.println(valAsigT+"");
+        //ENVIAR EL PRINT AL LOG
+        
+        
+        return null;
     }
 }

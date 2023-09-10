@@ -1,0 +1,162 @@
+package com.yeferal.desktopreproductor.gramm.list;
+import java_cup.runtime.Symbol;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import com.yeferal.desktopreproductor.ast.errors.*;
+
+//Codigo para el parser, variables, metodos
+parser code
+{:
+    //codigo
+	List<ErrorGramm> syntaxErrors = new ArrayList<>();
+    List<TrackList> listTrack = new ArrayList<>();
+    VerificatorCamp veri = new VerificatorCamp();
+
+	public void syntax_error(Symbol s) {
+		int row = s.right+1;
+		int column = s.left+1;
+		String token = s.value + "";
+		addError(row, column, ErrorType.SYNTACTIC, token, "Secuencia de Token no reconocida.");
+		System.out.println("ERROR: Fila: "+(s.right+1)+", Columna: "+(s.left+1)+", Token: "+s.value);
+
+	}
+
+	public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+		if(cur_token.toString().equals("#0")){
+			//String message = s.toString();
+			//StringBuilder m = new StringBuilder("Error: ");
+			String token =  "Fin del archivo";
+			int column = cur_token.left+1;
+			int row = cur_token.right+1;
+			addError(row, column, ErrorType.SYNTACTIC, token, "No se pudo recuperar y seguir analizando, no se encontraron mas tokens.");
+            
+        }else{
+			//String message = s.toString();
+			//StringBuilder m = new StringBuilder("Error: ");
+			String token =  (String) cur_token.value;
+			int column = cur_token.left+1;
+			int row = cur_token.right+1;
+			addError(row, column, ErrorType.SYNTACTIC, token, "No se pudo recuperar y seguir analizando.");
+			
+        }
+		System.out.println("No se pudo recuperar y seguir analizando, no se encontraron mas tokens.");
+	}
+
+	public void addError(int row, int column, ErrorType errorType, String token, String description){
+        syntaxErrors.add(new ErrorGramm(new PositionToken(row, column), errorType, token, description));
+    }
+
+	public List<ErrorGramm> getSyntaxErrors(){
+        return syntaxErrors;
+    }
+
+	public List<TrackList> getListTracks(){
+		return listTrack;
+	}
+
+:}
+
+//Coidgo para las acciones gramaticales
+action code
+{:
+    
+:}
+
+terminal lista, nombre, random, circular, pistas;
+terminal llave_a, llave_c, corchete_a, corchete_c, coma, dos_puntos;
+terminal true_rsv, false_rsv;
+terminal cadena, identificador;
+
+non terminal INICIO, CODE, STRUCT_LIST, LISTA, CONTENT_LIST, CONTENT_MOD;
+non terminal STRUCT_NOMBRE, STRUCT_RANDOM, STRUCT_CIRCULAR, STRUCT_PISTAS;
+non terminal LIST_TRACKS, MULTI_TRACK;
+/*non terminal ;
+non terminal ;
+non terminal ;
+non terminal ;
+*/
+
+start with INICIO;
+
+INICIO ::= CODE;
+
+CODE ::= llave_a STRUCT_LIST:a llave_c {:parser.listTrack = (List<TrackList>) a;:};
+
+STRUCT_LIST ::= STRUCT_LIST:b coma LISTA:a {:List<TrackList> list = (List<TrackList>) b; list.add((TrackList) a); RESULT=list;:}
+                |LISTA:a {:List<TrackList> list = new ArrayList<>(); list.add((TrackList) a); RESULT=list;:};
+
+LISTA ::= lista dos_puntos llave_a CONTENT_LIST:a llave_c {:RESULT = a;:};
+
+CONTENT_LIST ::= CONTENT_MOD:a coma CONTENT_MOD:b coma CONTENT_MOD:c coma CONTENT_MOD:d {:
+                TrackList trl = parser.veri.fromFour(a,b,c,d);
+                if(trl!=null){
+                    RESULT = trl;
+                }else{
+                    parser.addError(aright+1, aleft+1, ErrorType.SYNTACTIC, (String) a, "CAMPOS INCORRECTOS, deben de ser diferentes");
+                }
+                :}
+                |CONTENT_MOD:a coma CONTENT_MOD:b coma CONTENT_MOD:c {:
+                TrackList trl = parser.veri.fromThree(a,b,c);
+                if(trl!=null){
+                    RESULT = trl;
+                }else{
+                    parser.addError(aright+1, aleft+1, ErrorType.SYNTACTIC, (String) a, "CAMPOS INCORRECTOS, deben de ser diferentes");
+                }
+                :}
+                |CONTENT_MOD:a coma CONTENT_MOD:b {:
+                TrackList trl = parser.veri.fromTwo(a,b);
+                if(trl!=null){
+                    RESULT = trl;
+                }else{
+                    parser.addError(aright+1, aleft+1, ErrorType.SYNTACTIC, (String) a, "CAMPOS INCORRECTOS, deben de ser diferentes");
+                }
+                :}
+                |CONTENT_MOD:a {:
+                TrackList trl = parser.veri.fromOne(a);
+                if(trl!=null){
+                    RESULT = trl;
+                }else{
+                    parser.addError(aright+1, aleft+1, ErrorType.SYNTACTIC, (String) a, "CAMPOS INCORRECTOS, deben de ser diferentes");
+                }
+                :}
+                |CONTENT_MOD:a error:e CONTENT_MOD:d
+                {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura, se esperaba una coma ,");:}
+                |error:e coma CONTENT_MOD:d
+                {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura, se esperaba un parametro");:}
+                |error:e 
+                {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura del contenido de la lista");:};
+
+
+
+CONTENT_MOD ::=  STRUCT_NOMBRE:a {:RESULT = a;:}
+                |STRUCT_RANDOM:a {:RESULT = a;:}
+                |STRUCT_CIRCULAR:a {:RESULT = a;:}
+                |STRUCT_PISTAS:a {:RESULT = a;:};
+
+STRUCT_NOMBRE ::=   nombre dos_puntos cadena:a {:RESULT = a;:};
+
+STRUCT_RANDOM ::=    random dos_puntos true_rsv {:RESULT = 1;:}
+                    |random dos_puntos false_rsv {:RESULT = 0;:}
+                    |random dos_puntos error:e;
+
+STRUCT_CIRCULAR ::=  circular dos_puntos true_rsv {:RESULT = true;:}
+                    |circular dos_puntos false_rsv {:RESULT = false;:}
+                    |circular dos_puntos error:e;
+
+
+STRUCT_PISTAS ::= pistas dos_puntos corchete_a LIST_TRACKS:a corchete_c {:RESULT = a;:}
+                |pistas dos_puntos error:e
+                ;
+
+
+LIST_TRACKS ::=  MULTI_TRACK:a {:RESULT = a;:}
+                | {:List<String> list = new ArrayList<>(); RESULT=list;:};
+
+
+MULTI_TRACK ::=  MULTI_TRACK:b coma identificador:a {:List<String> list = (List<String>) b; list.add((String) a); RESULT=list;:}
+                |identificador:a {:List<String> list = new ArrayList<>(); list.add((String) a); RESULT=list;:}
+                |MULTI_TRACK:b error:e identificador:a
+                {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error, se esperaba una coma ,");:}
+                |error:e {:parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estructura, se esperaba una Identificado");:}
+                ;
