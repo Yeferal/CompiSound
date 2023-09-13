@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CompiSound"
+rootProject.name = "Reproductor"
 include(":app")

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.piano.PianoActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLineTopPiano"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75"/>
+
+    <Button
+        android:id="@+id/btnDo"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="Do"
+        android:textSize="8sp"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnDoS"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnDoS"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/black"
+        android:text="Do#"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnRe"
+        app:layout_constraintStart_toEndOf="@+id/btnDo"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnRe"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="Re"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnReS"
+        app:layout_constraintStart_toEndOf="@+id/btnDoS"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano"
+        />
+
+
+    <Button
+        android:id="@+id/btnReS"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/black"
+        android:text="Re#"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnMi"
+        app:layout_constraintStart_toEndOf="@+id/btnRe"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano"/>
+
+    <Button
+        android:id="@+id/btnMi"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="Mi"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnFa"
+        app:layout_constraintStart_toEndOf="@+id/btnReS"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnFa"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="Fa"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnFaS"
+        app:layout_constraintStart_toEndOf="@+id/btnMi"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnFaS"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/black"
+        android:text="Fa#"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSol"
+        app:layout_constraintStart_toEndOf="@+id/btnFa"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+
+    <Button
+        android:id="@+id/btnSol"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="Sol"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSolS"
+        app:layout_constraintStart_toEndOf="@+id/btnFaS"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnSolS"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/black"
+        android:text="Sol#"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnLa"
+        app:layout_constraintStart_toEndOf="@+id/btnSol"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano"  />
+
+    <Button
+        android:id="@+id/btnLa"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="La"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnLaS"
+        app:layout_constraintStart_toEndOf="@+id/btnSolS"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnLaS"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/black"
+        android:text="La#"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSi"
+        app:layout_constraintStart_toEndOf="@+id/btnLa"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <Button
+        android:id="@+id/btnSi"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="2dp"
+        android:backgroundTint="@color/cardview_shadow_start_color"
+        android:text="Si"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnLaS"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTopPiano" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="48dp" />
+
+    <EditText
+        android:id="@+id/editTextCode"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:hint="Codigo de la Pista"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="text|textMultiLine"
+        app:layout_constraintBottom_toTopOf="@+id/guideLineTopPiano"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline10"
+        app:layout_constraintVertical_bias="0.507" />
+
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Limpiar"
+        android:textSize="8sp"
+        android:backgroundTint="@color/red"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/btnCompile"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/btnCompile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compilar"
+        android:textSize="8sp"
+        android:backgroundTint="@color/green"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toStartOf="@+id/btnClear"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toEndOf="@+id/btnRec"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnRec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rec"
+        android:textSize="8sp"
+        android:backgroundTint="@color/teal_700"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toStartOf="@+id/btnCompile"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvRec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sin Grabar"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
