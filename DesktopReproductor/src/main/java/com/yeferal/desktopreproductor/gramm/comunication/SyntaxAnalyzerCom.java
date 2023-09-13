@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Stack;
 import com.yeferal.desktopreproductor.ast.errors.*;
 import com.yeferal.desktopreproductor.ast.main.instructions.notas.MusicalNotes;
+import com.yeferal.desktopreproductor.gramm.comunication.obj.*;
 import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
@@ -36,20 +37,30 @@ public class SyntaxAnalyzerCom extends java_cup.runtime.lr_parser {
   /** Production table. */
   protected static final short _production_table[][] = 
     unpackFromStrings(new String[] {
-    "\000\054\000\002\002\004\000\002\002\003\000\002\003" +
-    "\003\000\002\003\003\000\002\004\005\000\002\005\006" +
-    "\000\002\005\006\000\002\005\006\000\002\006\005\000" +
-    "\002\006\002\000\002\007\004\000\002\007\003\000\002" +
-    "\010\020\000\002\011\003\000\002\011\003\000\002\011" +
-    "\003\000\002\011\003\000\002\011\003\000\002\011\003" +
+    "\000\115\000\002\002\004\000\002\002\003\000\002\003" +
+    "\003\000\002\003\003\000\002\004\005\000\002\004\004" +
+    "\000\002\005\006\000\002\005\006\000\002\005\006\000" +
+    "\002\005\003\000\002\006\005\000\002\006\002\000\002" +
+    "\007\004\000\002\007\003\000\002\007\004\000\002\010" +
+    "\020\000\002\010\004\000\002\011\003\000\002\011\003" +
     "\000\002\011\003\000\002\011\003\000\002\011\003\000" +
     "\002\011\003\000\002\011\003\000\002\011\003\000\002" +
-    "\012\003\000\002\012\003\000\002\012\003\000\002\012" +
-    "\003\000\002\013\005\000\002\014\013\000\002\014\012" +
-    "\000\002\015\012\000\002\020\003\000\002\020\003\000" +
-    "\002\016\013\000\002\016\012\000\002\017\005\000\002" +
-    "\021\013\000\002\021\012\000\002\022\011\000\002\023" +
-    "\004\000\002\023\003\000\002\024\020" });
+    "\011\003\000\002\011\003\000\002\011\003\000\002\011" +
+    "\003\000\002\012\004\000\002\012\004\000\002\012\004" +
+    "\000\002\012\004\000\002\012\004\000\002\012\004\000" +
+    "\002\013\005\000\002\013\004\000\002\014\013\000\002" +
+    "\014\012\000\002\014\004\000\002\026\003\000\002\026" +
+    "\002\000\002\015\015\000\002\015\014\000\002\015\006" +
+    "\000\002\015\004\000\002\020\003\000\002\020\003\000" +
+    "\002\027\003\000\002\027\002\000\002\016\013\000\002" +
+    "\016\012\000\002\016\004\000\002\017\005\000\002\017" +
+    "\004\000\002\021\013\000\002\021\012\000\002\021\004" +
+    "\000\002\030\003\000\002\030\002\000\002\022\012\000" +
+    "\002\022\011\000\002\022\006\000\002\022\004\000\002" +
+    "\023\004\000\002\023\003\000\002\023\004\000\002\031" +
+    "\003\000\002\031\002\000\002\024\011\000\002\024\006" +
+    "\000\002\024\004\000\002\025\013\000\002\025\012\000" +
+    "\002\025\004\000\002\032\003\000\002\032\002" });
 
   /** Access to production table. */
   public short[][] production_table() {return _production_table;}
@@ -57,77 +68,125 @@ public class SyntaxAnalyzerCom extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\215\000\014\004\007\014\005\016\016\022\010\027" +
-    "\013\001\002\000\004\002\000\001\002\000\004\016\177" +
-    "\001\002\000\004\002\uffe8\001\002\000\004\010\123\001" +
-    "\002\000\004\020\075\001\002\000\004\002\074\001\002" +
-    "\000\004\002\uffff\001\002\000\004\022\053\001\002\000" +
-    "\004\002\uffe7\001\002\000\004\002\ufffe\001\002\000\004" +
-    "\020\021\001\002\000\004\002\uffe5\001\002\000\004\002" +
-    "\uffe6\001\002\000\004\054\022\001\002\000\004\024\023" +
-    "\001\002\000\006\025\025\026\026\001\002\000\004\050" +
-    "\027\001\002\000\004\050\uffe0\001\002\000\004\050\uffdf" +
-    "\001\002\000\004\022\031\001\002\000\006\017\041\022" +
-    "\042\001\002\000\004\020\032\001\002\000\004\051\033" +
-    "\001\002\000\004\054\034\001\002\000\004\023\035\001" +
-    "\002\000\004\051\036\001\002\000\004\052\037\001\002" +
-    "\000\004\050\040\001\002\000\006\017\uffdd\022\uffdd\001" +
-    "\002\000\004\002\uffe1\001\002\000\004\020\043\001\002" +
-    "\000\004\051\044\001\002\000\004\054\045\001\002\000" +
-    "\004\023\046\001\002\000\004\051\047\001\002\000\004" +
-    "\052\050\001\002\000\004\050\051\001\002\000\006\017" +
-    "\uffde\022\uffde\001\002\000\006\022\064\030\063\001\002" +
-    "\000\004\020\054\001\002\000\004\051\055\001\002\000" +
-    "\004\054\056\001\002\000\004\023\057\001\002\000\004" +
-    "\051\060\001\002\000\004\052\061\001\002\000\004\050" +
-    "\062\001\002\000\006\022\uffda\030\uffda\001\002\000\004" +
-    "\002\uffdc\001\002\000\004\020\065\001\002\000\004\051" +
-    "\066\001\002\000\004\054\067\001\002\000\004\023\070" +
-    "\001\002\000\004\051\071\001\002\000\004\052\072\001" +
-    "\002\000\004\050\073\001\002\000\006\022\uffdb\030\uffdb" +
-    "\001\002\000\004\002\001\001\002\000\004\051\076\001" +
-    "\002\000\004\054\077\001\002\000\004\050\100\001\002" +
-    "\000\004\031\102\001\002\000\006\007\uffd7\031\uffd7\001" +
-    "\002\000\004\032\106\001\002\000\006\007\105\031\102" +
-    "\001\002\000\006\007\uffd8\031\uffd8\001\002\000\004\002" +
-    "\uffd9\001\002\000\004\051\107\001\002\000\004\052\110" +
-    "\001\002\000\004\050\111\001\002\000\004\034\112\001" +
-    "\002\000\004\023\113\001\002\000\004\051\114\001\002" +
-    "\000\004\052\115\001\002\000\004\035\116\001\002\000" +
-    "\004\051\117\001\002\000\004\053\120\001\002\000\004" +
-    "\050\121\001\002\000\004\033\122\001\002\000\006\007" +
-    "\uffd6\031\uffd6\001\002\000\010\006\126\007\127\036\130" +
-    "\001\002\000\004\005\125\001\002\000\004\002\ufffd\001" +
-    "\002\000\004\011\174\001\002\000\004\011\167\001\002" +
-    "\000\004\011\131\001\002\000\004\037\134\001\002\000" +
-    "\006\005\ufffa\037\134\001\002\000\006\005\ufff6\037\ufff6" +
-    "\001\002\000\004\041\135\001\002\000\004\052\136\001" +
-    "\002\000\004\033\137\001\002\000\004\042\140\001\002" +
-    "\000\032\055\153\056\154\057\150\060\144\061\151\062" +
-    "\142\063\155\064\141\065\146\066\147\067\152\070\145" +
-    "\001\002\000\004\043\ufff1\001\002\000\004\043\uffeb\001" +
-    "\002\000\004\043\156\001\002\000\004\043\uffef\001\002" +
-    "\000\004\043\uffe9\001\002\000\004\043\uffee\001\002\000" +
-    "\004\043\uffec\001\002\000\004\043\ufff0\001\002\000\004" +
-    "\043\uffed\001\002\000\004\043\uffea\001\002\000\004\043" +
-    "\ufff4\001\002\000\004\043\ufff2\001\002\000\004\043\ufff3" +
-    "\001\002\000\004\044\157\001\002\000\004\052\160\001" +
-    "\002\000\004\045\161\001\002\000\004\046\162\001\002" +
-    "\000\004\052\163\001\002\000\004\047\164\001\002\000" +
-    "\004\040\165\001\002\000\006\005\ufff5\037\ufff5\001\002" +
-    "\000\006\005\ufff7\037\ufff7\001\002\000\006\005\ufff8\012" +
-    "\170\001\002\000\004\054\172\001\002\000\004\005\ufffb" +
-    "\001\002\000\004\013\173\001\002\000\004\005\ufff9\001" +
-    "\002\000\006\005\ufff8\012\170\001\002\000\004\005\ufffc" +
-    "\001\002\000\006\015\207\016\210\001\002\000\004\020" +
-    "\200\001\002\000\004\051\201\001\002\000\004\054\202" +
-    "\001\002\000\004\021\203\001\002\000\004\051\204\001" +
-    "\002\000\004\052\205\001\002\000\004\050\206\001\002" +
-    "\000\006\015\uffe2\016\uffe2\001\002\000\004\002\uffe4\001" +
-    "\002\000\004\020\211\001\002\000\004\051\212\001\002" +
-    "\000\004\054\213\001\002\000\004\021\214\001\002\000" +
-    "\004\051\215\001\002\000\004\052\216\001\002\000\004" +
-    "\050\217\001\002\000\006\015\uffe3\016\uffe3\001\002" });
+    "\000\326\000\012\003\015\004\007\014\005\027\012\001" +
+    "\002\000\004\002\000\001\002\000\010\003\304\015\uffd8" +
+    "\016\306\001\002\000\006\003\302\016\024\001\002\000" +
+    "\006\003\221\010\222\001\002\000\004\002\220\001\002" +
+    "\000\004\002\uffff\001\002\000\010\003\174\022\176\030" +
+    "\uffc6\001\002\000\004\002\ufffe\001\002\000\006\003\170" +
+    "\022\025\001\002\000\016\003\022\005\016\015\021\016" +
+    "\024\022\025\030\017\001\002\000\004\002\ufffc\001\002" +
+    "\000\006\003\uffcb\022\uffcb\001\002\000\006\002\uffe2\016" +
+    "\156\001\002\000\006\003\uffdd\016\uffdd\001\002\000\010" +
+    "\017\146\036\145\050\147\001\002\000\006\002\uffe1\022" +
+    "\136\001\002\000\004\020\100\001\002\000\004\020\026" +
+    "\001\002\000\004\051\027\001\002\000\004\052\030\001" +
+    "\002\000\004\050\031\001\002\000\010\003\034\031\033" +
+    "\036\uffbd\001\002\000\010\003\uffc0\031\uffc0\036\uffc0\001" +
+    "\002\000\004\032\072\001\002\000\012\003\040\031\033" +
+    "\033\041\050\042\001\002\000\004\036\070\001\002\000" +
+    "\010\003\040\031\033\036\uffbe\001\002\000\010\003\uffc1" +
+    "\031\uffc1\036\uffc1\001\002\000\006\033\041\050\042\001" +
+    "\002\000\010\003\uffba\031\uffba\036\uffba\001\002\000\010" +
+    "\003\045\033\uffb5\034\044\001\002\000\006\033\uffb6\034" +
+    "\060\001\002\000\004\023\051\001\002\000\004\050\050" +
+    "\001\002\000\004\033\047\001\002\000\010\003\uffbb\031" +
+    "\uffbb\036\uffbb\001\002\000\006\033\uffb7\034\uffb7\001\002" +
+    "\000\004\051\052\001\002\000\004\054\053\001\002\000" +
+    "\004\035\054\001\002\000\004\051\055\001\002\000\004" +
+    "\055\056\001\002\000\004\050\057\001\002\000\006\033" +
+    "\uffb8\034\uffb8\001\002\000\004\023\061\001\002\000\004" +
+    "\051\062\001\002\000\004\054\063\001\002\000\004\035" +
+    "\064\001\002\000\004\051\065\001\002\000\004\055\066" +
+    "\001\002\000\004\050\067\001\002\000\006\033\uffb9\034" +
+    "\uffb9\001\002\000\006\002\uffc4\022\uffc4\001\002\000\010" +
+    "\003\uffbf\031\uffbf\036\uffbf\001\002\000\004\051\073\001" +
+    "\002\000\004\054\074\001\002\000\004\050\075\001\002" +
+    "\000\010\003\045\033\uffb5\034\044\001\002\000\004\033" +
+    "\077\001\002\000\010\003\uffbc\031\uffbc\036\uffbc\001\002" +
+    "\000\004\051\101\001\002\000\004\052\102\001\002\000" +
+    "\004\024\103\001\002\000\004\051\104\001\002\000\006" +
+    "\025\106\026\107\001\002\000\004\050\110\001\002\000" +
+    "\004\050\uffd3\001\002\000\004\050\uffd2\001\002\000\010" +
+    "\003\112\017\uffd0\022\114\001\002\000\006\017\uffd1\022" +
+    "\126\001\002\000\004\050\125\001\002\000\004\017\124" +
+    "\001\002\000\004\020\115\001\002\000\004\051\116\001" +
+    "\002\000\004\052\117\001\002\000\004\023\120\001\002" +
+    "\000\004\051\121\001\002\000\004\054\122\001\002\000" +
+    "\004\050\123\001\002\000\006\017\uffce\022\uffce\001\002" +
+    "\000\006\002\uffd6\016\uffd6\001\002\000\006\017\uffcd\022" +
+    "\uffcd\001\002\000\004\020\127\001\002\000\004\051\130" +
+    "\001\002\000\004\052\131\001\002\000\004\023\132\001" +
+    "\002\000\004\051\133\001\002\000\004\054\134\001\002" +
+    "\000\004\050\135\001\002\000\006\017\uffcf\022\uffcf\001" +
+    "\002\000\004\020\137\001\002\000\004\051\140\001\002" +
+    "\000\004\052\141\001\002\000\004\050\142\001\002\000" +
+    "\010\003\034\031\033\036\uffbd\001\002\000\004\036\144" +
+    "\001\002\000\006\002\uffc5\022\uffc5\001\002\000\006\002" +
+    "\uffc2\022\uffc2\001\002\000\006\002\uffd4\016\uffd4\001\002" +
+    "\000\014\003\150\017\uffd0\022\114\031\033\036\uffbd\001" +
+    "\002\000\012\003\040\031\033\033\041\050\155\001\002" +
+    "\000\004\017\154\001\002\000\004\036\153\001\002\000" +
+    "\006\002\uffc3\022\uffc3\001\002\000\006\002\uffd5\016\uffd5" +
+    "\001\002\000\014\003\045\017\uffcd\022\uffcd\033\uffb5\034" +
+    "\044\001\002\000\004\020\157\001\002\000\004\051\160" +
+    "\001\002\000\004\052\161\001\002\000\004\024\162\001" +
+    "\002\000\004\051\163\001\002\000\006\025\106\026\107" +
+    "\001\002\000\004\050\165\001\002\000\010\003\112\017" +
+    "\uffd0\022\114\001\002\000\004\017\167\001\002\000\006" +
+    "\002\uffd7\016\uffd7\001\002\000\010\002\uffdf\036\145\050" +
+    "\172\001\002\000\006\002\uffe3\022\136\001\002\000\010" +
+    "\003\034\031\033\036\uffbd\001\002\000\006\022\210\030" +
+    "\uffc7\001\002\000\004\050\207\001\002\000\004\030\206" +
+    "\001\002\000\004\020\177\001\002\000\004\051\200\001" +
+    "\002\000\004\052\201\001\002\000\004\023\202\001\002" +
+    "\000\004\051\203\001\002\000\004\054\204\001\002\000" +
+    "\004\050\205\001\002\000\006\022\uffc9\030\uffc9\001\002" +
+    "\000\006\003\uffcc\022\uffcc\001\002\000\006\022\uffc8\030" +
+    "\uffc8\001\002\000\004\020\211\001\002\000\004\051\212" +
+    "\001\002\000\004\052\213\001\002\000\004\023\214\001" +
+    "\002\000\004\051\215\001\002\000\004\054\216\001\002" +
+    "\000\004\050\217\001\002\000\006\022\uffca\030\uffca\001" +
+    "\002\000\004\002\001\001\002\000\004\005\ufff8\001\002" +
+    "\000\010\006\226\007\227\053\225\001\002\000\004\005" +
+    "\224\001\002\000\004\002\ufffd\001\002\000\004\011\237" +
+    "\001\002\000\004\011\235\001\002\000\004\011\230\001" +
+    "\002\000\006\005\ufff6\012\231\001\002\000\004\052\233" +
+    "\001\002\000\004\005\ufffa\001\002\000\004\013\234\001" +
+    "\002\000\004\005\ufff7\001\002\000\006\005\ufff6\012\231" +
+    "\001\002\000\004\005\ufffb\001\002\000\006\003\242\037" +
+    "\243\001\002\000\010\003\276\005\ufff9\037\243\001\002" +
+    "\000\010\003\ufff4\005\ufff4\037\ufff4\001\002\000\010\003" +
+    "\276\037\243\040\277\001\002\000\004\041\244\001\002" +
+    "\000\004\054\245\001\002\000\004\033\246\001\002\000" +
+    "\004\042\247\001\002\000\032\056\262\057\263\060\257" +
+    "\061\253\062\260\063\251\064\264\065\250\066\254\067" +
+    "\256\070\261\071\255\001\002\000\004\043\uffed\001\002" +
+    "\000\004\043\uffe7\001\002\000\004\043\265\001\002\000" +
+    "\004\043\uffeb\001\002\000\004\043\uffea\001\002\000\004" +
+    "\043\uffe5\001\002\000\004\043\uffe8\001\002\000\004\043" +
+    "\uffec\001\002\000\004\043\uffe9\001\002\000\004\043\uffe6" +
+    "\001\002\000\004\043\ufff0\001\002\000\004\043\uffee\001" +
+    "\002\000\004\043\uffef\001\002\000\004\044\266\001\002" +
+    "\000\004\054\267\001\002\000\004\045\270\001\002\000" +
+    "\004\046\271\001\002\000\004\054\272\001\002\000\004" +
+    "\047\273\001\002\000\004\040\274\001\002\000\010\003" +
+    "\ufff2\005\ufff2\037\ufff2\001\002\000\010\003\ufff3\005\ufff3" +
+    "\037\ufff3\001\002\000\004\040\277\001\002\000\010\003" +
+    "\ufff1\005\ufff1\037\ufff1\001\002\000\010\003\ufff5\005\ufff5" +
+    "\037\ufff5\001\002\000\006\002\uffe4\016\156\001\002\000" +
+    "\010\002\uffe0\017\146\050\303\001\002\000\010\003\112" +
+    "\017\uffd0\022\114\001\002\000\004\050\330\001\002\000" +
+    "\006\015\uffd9\016\320\001\002\000\004\020\311\001\002" +
+    "\000\004\015\310\001\002\000\006\003\uffde\016\uffde\001" +
+    "\002\000\004\051\312\001\002\000\004\052\313\001\002" +
+    "\000\004\021\314\001\002\000\004\051\315\001\002\000" +
+    "\004\054\316\001\002\000\004\050\317\001\002\000\006" +
+    "\015\uffdb\016\uffdb\001\002\000\004\020\321\001\002\000" +
+    "\004\051\322\001\002\000\004\052\323\001\002\000\004" +
+    "\021\324\001\002\000\004\051\325\001\002\000\004\054" +
+    "\326\001\002\000\004\050\327\001\002\000\006\015\uffdc" +
+    "\016\uffdc\001\002\000\006\015\uffda\016\uffda\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -135,16 +194,50 @@ public class SyntaxAnalyzerCom extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\215\000\022\002\010\003\003\004\011\012\014\013" +
-    "\005\015\013\017\017\022\016\001\001\000\002\001\001" +
-    "\000\004\014\175\001\001\000\002\001\001\000\004\005" +
-    "\123\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\021\051\001\001\000\002\001\001\000" +
+    "\000\326\000\016\002\007\003\003\004\010\012\012\013" +
+    "\005\017\013\001\001\000\002\001\001\000\006\014\304" +
+    "\026\306\001\001\000\004\015\300\001\001\000\004\005" +
+    "\222\001\001\000\002\001\001\000\002\001\001\000\006" +
+    "\021\172\030\174\001\001\000\002\001\001\000\004\022" +
+    "\170\001\001\000\006\015\017\022\022\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\010\023\035\024\031\031\034\001\001" +
+    "\000\002\001\001\000\002\001\001\000\004\024\070\001" +
+    "\001\000\002\001\001\000\004\024\036\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\006\025" +
+    "\042\032\045\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\004\020" +
-    "\023\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\016\027\001\001\000\002\001\001\000" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\006\025\042\032\075\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\004" +
+    "\020\104\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\006\016\110\027\112\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\010\023\035\024\031" +
+    "\031\142\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\014\016\110\023\035" +
+    "\024\031\027\150\031\151\001\001\000\004\024\070\001" +
+    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\000\002\001\001\000\006\025\042\032\045\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\004\020\163\001\001\000" +
+    "\002\001\001\000\006\016\110\027\165\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\010\023\035\024\031\031\151\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
@@ -153,35 +246,29 @@ public class SyntaxAnalyzerCom extends java_cup.runtime.lr_parser {
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\001\000\002\001\001\000\002\001\001\000\004\006" +
+    "\231\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\004\006\235\001\001\000" +
+    "\002\001\001\000\006\007\237\010\240\001\001\000\004" +
+    "\010\277\001\001\000\002\001\001\000\004\010\274\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\006\023\102\024\100\001\001\000\002\001\001\000\002" +
-    "\001\001\000\004\024\103\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\006\007\131\010\132\001\001\000\004\010\165" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
-    "\001\000\002\001\001\000\002\001\001\000\004\011\142" +
-    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\000\002\001\001\000\004\011\251\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\004\006\170\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\004\006\174\001" +
-    "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
+    "\001\000\006\016\110\027\150\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
     "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
-    "\000\002\001\001\000\002\001\001\000\002\001\001" });
+    "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
+    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
+    "\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -222,6 +309,7 @@ public class SyntaxAnalyzerCom extends java_cup.runtime.lr_parser {
 
     //codigo
 	List<ErrorGramm> syntaxErrors = new ArrayList<>();
+    Object res = null;
 
 	public void syntax_error(Symbol s) {
 		int row = s.right+1;
@@ -261,6 +349,13 @@ public class SyntaxAnalyzerCom extends java_cup.runtime.lr_parser {
         return syntaxErrors;
     }
 
+    public void setRes(Object obj){
+        res = obj;
+    }
+
+    public Object getRes(){
+        return res;
+    }
 	
 
 
@@ -311,7 +406,10 @@ class CUP$SyntaxAnalyzerCom$actions {
           case 1: // INICIO ::= CODE 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		   RESULT = (Object) a; parser.setRes(a);
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("INICIO",0, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
@@ -320,7 +418,10 @@ class CUP$SyntaxAnalyzerCom$actions {
           case 2: // CODE ::= STATE_SOLICITUD 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("CODE",1, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
@@ -329,7 +430,10 @@ class CUP$SyntaxAnalyzerCom$actions {
           case 3: // CODE ::= STATE_OTROS 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("CODE",1, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
@@ -338,85 +442,172 @@ class CUP$SyntaxAnalyzerCom$actions {
           case 4: // STATE_SOLICITUD ::= solicitud_a STATE_CONT_SOLICITUD solicitud_c 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		RESULT = a;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_SOLICITUD",2, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 5: // STATE_CONT_SOLICITUD ::= tipo_a lista tipo_c STATE_OPT_SOLICITUD 
+          case 5: // STATE_SOLICITUD ::= error solicitud_c 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la solicitud");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_SOLICITUD",2, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 6: // STATE_CONT_SOLICITUD ::= tipo_a lista tipo_c STATE_OPT_SOLICITUD 
+            {
+              Object RESULT =null;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = new Solicitud(RequestType.LISTA,(String) b);
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_SOLICITUD",3, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 6: // STATE_CONT_SOLICITUD ::= tipo_a pista tipo_c STATE_OPT_SOLICITUD 
+          case 7: // STATE_CONT_SOLICITUD ::= tipo_a pista tipo_c STATE_OPT_SOLICITUD 
             {
               Object RESULT =null;
-
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = new Solicitud(RequestType.PISTA,(String) b);
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_SOLICITUD",3, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 7: // STATE_CONT_SOLICITUD ::= tipo_a pistanueva tipo_c STATE_NUEVA_SOLICITUD 
+          case 8: // STATE_CONT_SOLICITUD ::= tipo_a identificador tipo_c STATE_NUEVA_SOLICITUD 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = new Solicitud(RequestType.PISTANUEVA, (String) a, (List<DataPista>) b);
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_SOLICITUD",3, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 8: // STATE_OPT_SOLICITUD ::= nombre_a cadena nombre_c 
+          case 9: // STATE_CONT_SOLICITUD ::= error 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la solicitud");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_SOLICITUD",3, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 10: // STATE_OPT_SOLICITUD ::= nombre_a cadena nombre_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		RESULT = (String) a;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OPT_SOLICITUD",4, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 9: // STATE_OPT_SOLICITUD ::= 
+          case 11: // STATE_OPT_SOLICITUD ::= 
             {
               Object RESULT =null;
-
+		RESULT = null;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OPT_SOLICITUD",4, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 10: // STATE_NUEVA_SOLICITUD ::= STATE_NUEVA_SOLICITUD STATE_DATOS 
+          case 12: // STATE_NUEVA_SOLICITUD ::= STATE_NUEVA_SOLICITUD STATE_DATOS 
             {
               Object RESULT =null;
-
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		List<DataPista> list = (List<DataPista>) r; list.add((DataPista) a); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_NUEVA_SOLICITUD",5, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 11: // STATE_NUEVA_SOLICITUD ::= STATE_DATOS 
+          case 13: // STATE_NUEVA_SOLICITUD ::= STATE_DATOS 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		List<DataPista> list = new ArrayList<>(); list.add((DataPista) a); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_NUEVA_SOLICITUD",5, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 12: // STATE_DATOS ::= datos_a canal_a numero canal_c nota_a NOTA_STATE nota_c octava_a numero octava_c duracion_a numero duracion_c datos_c 
+          case 14: // STATE_NUEVA_SOLICITUD ::= error STATE_DATOS 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de los datos");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_NUEVA_SOLICITUD",5, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 15: // STATE_DATOS ::= datos_a canal_a numero canal_c nota_a NOTA_STATE nota_c octava_a numero octava_c duracion_a numero duracion_c datos_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-11)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-11)).right;
+		int a = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-11)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-5)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-5)).right;
+		int c = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-5)).value;
+		int dleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)).left;
+		int dright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)).right;
+		int d = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)).value;
+		RESULT = new DataPista(a, (MusicalNotes) b, c, d);
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_DATOS",6, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-13)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 13: // NOTA_STATE ::= do_rsv 
+          case 16: // STATE_DATOS ::= error datos_c 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de los datos");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_DATOS",6, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 17: // NOTA_STATE ::= do_rsv 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.C;
@@ -425,7 +616,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 14: // NOTA_STATE ::= do_s 
+          case 18: // NOTA_STATE ::= do_s 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.C_S;
@@ -434,7 +625,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 15: // NOTA_STATE ::= re 
+          case 19: // NOTA_STATE ::= re 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.D;
@@ -443,7 +634,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // NOTA_STATE ::= re_s 
+          case 20: // NOTA_STATE ::= re_s 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.D_S;
@@ -452,7 +643,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 17: // NOTA_STATE ::= mi 
+          case 21: // NOTA_STATE ::= mi 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.E;
@@ -461,7 +652,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 18: // NOTA_STATE ::= fa 
+          case 22: // NOTA_STATE ::= fa 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.F;
@@ -470,7 +661,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 19: // NOTA_STATE ::= fa_s 
+          case 23: // NOTA_STATE ::= fa_s 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.F_S;
@@ -479,7 +670,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 20: // NOTA_STATE ::= sol 
+          case 24: // NOTA_STATE ::= sol 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.G;
@@ -488,7 +679,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 21: // NOTA_STATE ::= sol_s 
+          case 25: // NOTA_STATE ::= sol_s 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.G_S;
@@ -497,7 +688,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 22: // NOTA_STATE ::= la 
+          case 26: // NOTA_STATE ::= la 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.A;
@@ -506,7 +697,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 23: // NOTA_STATE ::= la_s 
+          case 27: // NOTA_STATE ::= la_s 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.A_S;
@@ -515,7 +706,7 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 24: // NOTA_STATE ::= si 
+          case 28: // NOTA_STATE ::= si 
             {
               Object RESULT =null;
 		RESULT = MusicalNotes.B;
@@ -524,173 +715,638 @@ class CUP$SyntaxAnalyzerCom$actions {
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 25: // STATE_OTROS ::= STATE_LISTA_LISTAS 
+          case 29: // STATE_OTROS ::= STATE_LISTA_LISTAS STATE_LISTA_PISTAS 
             {
               Object RESULT =null;
-
-              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = new RequesLista((List<DataListaListas>) a, (List<DataListaPistas>) b);
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 26: // STATE_OTROS ::= STATE_LISTA_PISTAS 
+          case 30: // STATE_OTROS ::= STATE_LISTA_PISTAS_ONLY STATE_PISTA 
             {
               Object RESULT =null;
-
-              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = new RequesPista((List<TrackOnList>) a, (List<DataStructPista>) b);;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 27: // STATE_OTROS ::= STATE_LISTA_PISTAS_ONLY 
+          case 31: // STATE_OTROS ::= error STATE_LISTA_PISTAS 
             {
               Object RESULT =null;
-
-              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la lista de listas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 28: // STATE_OTROS ::= STATE_PISTA 
+          case 32: // STATE_OTROS ::= error STATE_PISTA 
             {
               Object RESULT =null;
-
-              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la lista de las pistas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 29: // STATE_LISTA_LISTAS ::= listas_a STATE_CONT_LISTA_LISTAS listas_c 
+          case 33: // STATE_OTROS ::= STATE_LISTA_LISTAS error 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la lista de pistas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 34: // STATE_OTROS ::= STATE_LISTA_PISTAS_ONLY error 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura del listado de los cales de pista");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_OTROS",8, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 35: // STATE_LISTA_LISTAS ::= listas_a STATE_EMPTY_LISTA_LISTAS listas_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		RESULT = a;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_LISTAS",9, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 30: // STATE_CONT_LISTA_LISTAS ::= STATE_CONT_LISTA_LISTAS lista_a nombre igual cadena pistas igual numero cerrar 
+          case 36: // STATE_LISTA_LISTAS ::= error listas_c 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la lista de Listas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_LISTAS",9, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 37: // STATE_CONT_LISTA_LISTAS ::= STATE_CONT_LISTA_LISTAS lista_a nombre igual cadena pistas igual numero cerrar 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		int b = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataListaListas> list = (List<DataListaListas>) r; list.add(new DataListaListas((String) a, (int) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_LISTA_LISTAS",10, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 31: // STATE_CONT_LISTA_LISTAS ::= lista_a nombre igual cadena pistas igual numero cerrar 
+          case 38: // STATE_CONT_LISTA_LISTAS ::= lista_a nombre igual cadena pistas igual numero cerrar 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		int b = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataListaListas> list = new ArrayList<>(); list.add(new DataListaListas((String) a, (int) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_LISTA_LISTAS",10, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 32: // STATE_LISTA_PISTAS ::= lista_a nombre cadena aleatorio STATE_ALEATORIO cerrar STATE_CONT_LISTA_PISTAS lista_c 
+          case 39: // STATE_CONT_LISTA_LISTAS ::= error cerrar 
             {
               Object RESULT =null;
-
-              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS",11, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la lista de listas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_LISTA_LISTAS",10, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 33: // STATE_ALEATORIO ::= si_rsv 
+          case 40: // STATE_EMPTY_LISTA_LISTAS ::= STATE_CONT_LISTA_LISTAS 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_LISTA_LISTAS",20, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 41: // STATE_EMPTY_LISTA_LISTAS ::= 
+            {
+              Object RESULT =null;
+		List<DataListaListas> list = new ArrayList<>(); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_LISTA_LISTAS",20, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 42: // STATE_LISTA_PISTAS ::= STATE_LISTA_PISTAS lista_a nombre igual cadena aleatorio igual STATE_ALEATORIO cerrar STATE_EMPTY_LISTA_PISTAS lista_c 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-10)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-10)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-10)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object c = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataListaPistas> list = (List<DataListaPistas>) r; list.add(new DataListaPistas((String)a, (boolean) b, (List<TrackOnList>) c)); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS",11, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-10)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 43: // STATE_LISTA_PISTAS ::= lista_a nombre igual cadena aleatorio igual STATE_ALEATORIO cerrar STATE_EMPTY_LISTA_PISTAS lista_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object c = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataListaPistas> list = new ArrayList<>(); list.add(new DataListaPistas((String)a, (boolean) b, (List<TrackOnList>) c)); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS",11, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-9)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 44: // STATE_LISTA_PISTAS ::= error cerrar STATE_EMPTY_LISTA_PISTAS lista_c 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int cleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int cright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object c = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la Lista de pistas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS",11, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 45: // STATE_LISTA_PISTAS ::= error lista_c 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la Lista de pistas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS",11, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 46: // STATE_ALEATORIO ::= si_rsv 
+            {
+              Object RESULT =null;
+		RESULT = true;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_ALEATORIO",14, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 34: // STATE_ALEATORIO ::= no 
+          case 47: // STATE_ALEATORIO ::= no 
             {
               Object RESULT =null;
-
+		RESULT = false;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_ALEATORIO",14, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 35: // STATE_CONT_LISTA_PISTAS ::= STATE_CONT_LISTA_PISTAS pista_ab nombre igual cadena duracion igual numero cerrar 
+          case 48: // STATE_EMPTY_LISTA_PISTAS ::= STATE_CONT_LISTA_PISTAS 
             {
               Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_LISTA_PISTAS",21, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 49: // STATE_EMPTY_LISTA_PISTAS ::= 
+            {
+              Object RESULT =null;
+		List<TrackOnList> list = new ArrayList<>(); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_LISTA_PISTAS",21, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 50: // STATE_CONT_LISTA_PISTAS ::= STATE_CONT_LISTA_PISTAS pista_ab nombre igual cadena duracion igual numero cerrar 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		int b = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<TrackOnList> list = (List<TrackOnList>) r; list.add(new TrackOnList((String) a, (int) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_LISTA_PISTAS",12, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 36: // STATE_CONT_LISTA_PISTAS ::= pista_ab nombre igual cadena duracion igual numero cerrar 
+          case 51: // STATE_CONT_LISTA_PISTAS ::= pista_ab nombre igual cadena duracion igual numero cerrar 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		int b = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<TrackOnList> list = new ArrayList<>(); list.add(new TrackOnList((String) a, (int) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_LISTA_PISTAS",12, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 37: // STATE_LISTA_PISTAS_ONLY ::= pistas_a STATE_CONTE_LISTA_PISTAS_ONLY pistas_c 
+          case 52: // STATE_CONT_LISTA_PISTAS ::= error cerrar 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la lista de pistas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_LISTA_PISTAS",12, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 53: // STATE_LISTA_PISTAS_ONLY ::= pistas_a STATE_EMPTY_LISTA_PISTAS_ONLY pistas_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		RESULT = a;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS_ONLY",13, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-2)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 38: // STATE_CONTE_LISTA_PISTAS_ONLY ::= STATE_CONTE_LISTA_PISTAS_ONLY pista_ab nombre igual cadena duracion igual numero cerrar 
+          case 54: // STATE_LISTA_PISTAS_ONLY ::= error pistas_c 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la pistas");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_LISTA_PISTAS_ONLY",13, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 55: // STATE_CONTE_LISTA_PISTAS_ONLY ::= STATE_CONTE_LISTA_PISTAS_ONLY pista_ab nombre igual cadena duracion igual numero cerrar 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		int b = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<TrackOnList> list = (List<TrackOnList>) r; list.add(new TrackOnList((String) a, (int) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONTE_LISTA_PISTAS_ONLY",15, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 39: // STATE_CONTE_LISTA_PISTAS_ONLY ::= pista_ab nombre igual cadena duracion igual numero cerrar 
+          case 56: // STATE_CONTE_LISTA_PISTAS_ONLY ::= pista_ab nombre igual cadena duracion igual numero cerrar 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		int b = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<TrackOnList> list = new ArrayList<>(); list.add(new TrackOnList((String) a, (int) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONTE_LISTA_PISTAS_ONLY",15, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 40: // STATE_PISTA ::= pista_ab nombre igual cadena cerrar STATE_CONT_PISTA pista 
+          case 57: // STATE_CONTE_LISTA_PISTAS_ONLY ::= error cerrar 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la pista");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONTE_LISTA_PISTAS_ONLY",15, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 58: // STATE_EMPTY_LISTA_PISTAS_ONLY ::= STATE_CONTE_LISTA_PISTAS_ONLY 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_LISTA_PISTAS_ONLY",22, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 59: // STATE_EMPTY_LISTA_PISTAS_ONLY ::= 
+            {
+              Object RESULT =null;
+		List<TrackOnList> list = new ArrayList<>(); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_LISTA_PISTAS_ONLY",22, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 60: // STATE_PISTA ::= STATE_PISTA pista_ab nombre igual cadena cerrar STATE_EMPTY_PISTA pista_c 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataStructPista> list = (List<DataStructPista>) r; list.add(new DataStructPista((String) a, (List<DataChannel>) b)); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_PISTA",16, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 61: // STATE_PISTA ::= pista_ab nombre igual cadena cerrar STATE_EMPTY_PISTA pista_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataStructPista> list = new ArrayList<>(); list.add(new DataStructPista((String) a, (List<DataChannel>) b)); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_PISTA",16, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 41: // STATE_CONT_PISTA ::= STATE_CONT_PISTA STRUCT_PISTA 
+          case 62: // STATE_PISTA ::= error cerrar STATE_EMPTY_PISTA pista_c 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la pista");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_PISTA",16, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 63: // STATE_PISTA ::= error pista_c 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la pista");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_PISTA",16, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 64: // STATE_CONT_PISTA ::= STATE_CONT_PISTA STRUCT_PISTA 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		List<DataChannel> list = (List<DataChannel>) r; list.add((DataChannel) a); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_PISTA",17, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 42: // STATE_CONT_PISTA ::= STRUCT_PISTA 
+          case 65: // STATE_CONT_PISTA ::= STRUCT_PISTA 
             {
               Object RESULT =null;
-
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		List<DataChannel> list = new ArrayList<>(); list.add((DataChannel) a); RESULT = list;
               CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_PISTA",17, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 43: // STRUCT_PISTA ::= canal_ab numero_rsv igual numero cerrar nota_ab duracion igual numero frecuencia igual decimal cerrar canal_c 
+          case 66: // STATE_CONT_PISTA ::= error STRUCT_PISTA 
             {
               Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de la canal");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_CONT_PISTA",17, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
 
-              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STRUCT_PISTA",18, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-13)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 67: // STATE_EMPTY_PISTA ::= STATE_CONT_PISTA 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_PISTA",23, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 68: // STATE_EMPTY_PISTA ::= 
+            {
+              Object RESULT =null;
+		List<DataChannel> list = new ArrayList<>(); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_PISTA",23, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 69: // STRUCT_PISTA ::= canal_ab numero_rsv igual numero cerrar STATE_EMPTY_NOTES_CHANNEL canal_c 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		int a = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		RESULT = new DataChannel((int) a, (List<DataNote>) b);
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STRUCT_PISTA",18, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-6)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 70: // STRUCT_PISTA ::= error cerrar STATE_EMPTY_NOTES_CHANNEL canal_c 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object b = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de los canales");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STRUCT_PISTA",18, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-3)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 71: // STRUCT_PISTA ::= error canal_c 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de los canales");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STRUCT_PISTA",18, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 72: // STATE_NOTES_CHANNEL ::= STATE_NOTES_CHANNEL nota_ab duracion igual numero frecuencia igual decimal cerrar 
+            {
+              Object RESULT =null;
+		int rleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).left;
+		int rright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).right;
+		Object r = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)).value;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		int a = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		double b = (double)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataNote> list = (List<DataNote>) r; list.add(new DataNote((int) a, (double) b)); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_NOTES_CHANNEL",19, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-8)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 73: // STATE_NOTES_CHANNEL ::= nota_ab duracion igual numero frecuencia igual decimal cerrar 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).right;
+		int a = (int)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-4)).value;
+		int bleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		double b = (double)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		List<DataNote> list = new ArrayList<>(); list.add(new DataNote((int) a, (double) b)); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_NOTES_CHANNEL",19, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-7)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 74: // STATE_NOTES_CHANNEL ::= error cerrar 
+            {
+              Object RESULT =null;
+		int eleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).left;
+		int eright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).right;
+		Object e = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)).value;
+		parser.addError(eright+1, eleft+1, ErrorType.SYNTACTIC, (String) e, "Error en la estrutura de los datos de la nota");
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_NOTES_CHANNEL",19, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.elementAt(CUP$SyntaxAnalyzerCom$top-1)), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 75: // STATE_EMPTY_NOTES_CHANNEL ::= STATE_NOTES_CHANNEL 
+            {
+              Object RESULT =null;
+		int aleft = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).left;
+		int aright = ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()).right;
+		Object a = (Object)((java_cup.runtime.Symbol) CUP$SyntaxAnalyzerCom$stack.peek()).value;
+		RESULT = a;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_NOTES_CHANNEL",24, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
+            }
+          return CUP$SyntaxAnalyzerCom$result;
+
+          /*. . . . . . . . . . . . . . . . . . . .*/
+          case 76: // STATE_EMPTY_NOTES_CHANNEL ::= 
+            {
+              Object RESULT =null;
+		List<DataNote> list = new ArrayList<>(); RESULT = list;
+              CUP$SyntaxAnalyzerCom$result = parser.getSymbolFactory().newSymbol("STATE_EMPTY_NOTES_CHANNEL",24, ((java_cup.runtime.Symbol)CUP$SyntaxAnalyzerCom$stack.peek()), RESULT);
             }
           return CUP$SyntaxAnalyzerCom$result;
 

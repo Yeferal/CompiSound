@@ -99,6 +99,7 @@ Blancos               = [" "\r\t\b\f""]
     "nombre"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.nombre , yycolumn, yyline, yytext());}
     "pistas"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.pistas , yycolumn, yyline, yytext());}
     "<pista"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.pista_ab , yycolumn, yyline, yytext());}
+    "</pista>"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.pista_c , yycolumn, yyline, yytext());}
     "duracion"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.duracion , yycolumn, yyline, yytext());}
     "aleatoria"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.aleatorio , yycolumn, yyline, yytext());}
     (\""SI"\")                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.si_rsv , yycolumn, yyline, yytext());}
@@ -110,7 +111,7 @@ Blancos               = [" "\r\t\b\f""]
     "</canal>"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.canal_c , yycolumn, yyline, yytext());}
     "<nota"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.nota_ab , yycolumn, yyline, yytext());}
     "frecuencia"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.frecuencia , yycolumn, yyline, yytext());}
-    "pistanueva"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.pistanueva , yycolumn, yyline, yytext());}
+    // "pistanueva"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.pistanueva , yycolumn, yyline, yytext());}
     "<datos>"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.datos_a , yycolumn, yyline, yytext());}
     "</datos>"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.datos_c , yycolumn, yyline, yytext());}
     "<canal>"                                     {printConsole(yytext()+"\n"); return new Symbol(SymbolComCode.canal_a , yycolumn, yyline, yytext());}
@@ -140,7 +141,7 @@ Blancos               = [" "\r\t\b\f""]
     "Si"                                    {printConsole(yytext()); return new Symbol(SymbolComCode.si , yycolumn, yyline, yytext());}
     
 
-    // ({Letra}("_"|{Letra}|{Numero})*)        {printConsole(yytext()); return new Symbol(SymbolComCode.identificador , yycolumn, yyline, yytext());}
+    ({Letra}("_"|{Letra}|{Numero})*)        {printConsole(yytext()); return new Symbol(SymbolComCode.identificador , yycolumn, yyline, yytext());}
     ({Numero})                              {printConsole(yytext()); return new Symbol(SymbolComCode.numero , yycolumn, yyline, Integer.parseInt(yytext()));}
     ({Numero}("\."){Numero})                {printConsole(yytext()); return new Symbol(SymbolComCode.decimal , yycolumn, yyline, Double.parseDouble(yytext()));}
     (\"[^\"]*\")                            {printConsole(yytext()); return new Symbol(SymbolComCode.cadena , yycolumn, yyline, yytext().substring(1, yytext().length() - 1));}

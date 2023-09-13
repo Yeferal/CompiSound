@@ -6,6 +6,10 @@
 package com.yeferal.desktopreproductor.gui;
 
 import com.yeferal.desktopreproductor.ast.errors.ErrorGramm;
+import com.yeferal.desktopreproductor.ast.main.instructions.ExeEsperar;
+import com.yeferal.desktopreproductor.ast.main.instructions.ExeReproducir;
+import com.yeferal.desktopreproductor.ast.main.instructions.SimpleEsperar;
+import com.yeferal.desktopreproductor.ast.main.instructions.SimpleReproducir;
 import com.yeferal.desktopreproductor.ast.main.tree.Environment;
 import com.yeferal.desktopreproductor.ast.main.tree.PlayerSound;
 import com.yeferal.desktopreproductor.ast.main.tree.TraslatorMain;
@@ -99,16 +103,14 @@ public class MainWindow extends javax.swing.JFrame {
                 paneCodeKeyReleased(evt);
             }
         });
-//        readFileTest();
-        readFileTestList();
+        readFileTest();
+//        readFileTestList();
         
 //        listTraks = new JList<>(listModel);
         
         updateListas();
         updatePistas();
         resetGraph();
-        
-        
     }
     
     private XYSeriesCollection createDataset() {
@@ -240,6 +242,20 @@ public class MainWindow extends javax.swing.JFrame {
         typeArchivo = "Pista";
     }
     
+    public List<Object> copyExecute(List<Object> list){
+        List<Object> listaN = new ArrayList<>();
+        for (Object object : list) {
+            if (object instanceof ExeReproducir) {
+                    ExeReproducir er = (ExeReproducir) object;
+                    listaN.add(new SimpleReproducir(er.getNote(), er.getOctave(), er.getTime(), er.getChannel()));
+                }else {
+                    ExeEsperar ee = (ExeEsperar) object;
+                    listaN.add(new SimpleEsperar(ee.getValue(), ee.getChannel()));
+                }
+        }
+        return listaN;
+    }
+    
     public void saveFile(Environment env){
         int opcion = JOptionPane.showConfirmDialog(this, "Archivo compilado correctamente \t¿Deseas guardar la Pista?");
         if (opcion == JOptionPane.YES_OPTION) {
@@ -263,6 +279,7 @@ public class MainWindow extends javax.swing.JFrame {
             // Aquí puedes guardar el archivo en la ubicación seleccionada
             if (typeArchivo.equals("Pista")) {
                 PistaFile pf = new PistaFile(env.nameTrac, lines.pane.getText(), env.nodeRoot);
+                pf.setListExecutes(copyExecute(env.getListExecutes()));
 //                pf.setListExecutes(env.getListExecutes());
                 fileAccess.guardarClaseEnArchivoPista(pf, "data/pistas/"+env.nameTrac);
                 JOptionPane.showMessageDialog(this, "Archivo guardado en: " + "/data/pistas");
@@ -290,6 +307,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (opcion == JOptionPane.YES_OPTION) {
             // Aquí puedes guardar el archivo en la ubicación seleccionada
             PistaFile pf = new PistaFile(env.nameTrac, lines.pane.getText(), env.nodeRoot);
+            pf.setListExecutes(copyExecute(env.getListExecutes()));
             atl.addPista(pf);
             fileAccess.guardarClaseEnArchivoAllPista(atl, "data/allpistas");
             JOptionPane.showMessageDialog(this, "Pista Agregada O Guardada ");
@@ -801,14 +819,15 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(panelCodePane, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelEditorCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelFila)
-                    .addComponent(buttonCompile)
-                    .addComponent(buttonPlayTrankCode)
-                    .addComponent(labelFilaInfo)
-                    .addComponent(labelColumn)
-                    .addComponent(labelColumnInfo)
-                    .addComponent(labelInfoFile, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
+                .addGroup(panelEditorCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelInfoFile, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                    .addGroup(panelEditorCodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(labelFila)
+                        .addComponent(buttonCompile)
+                        .addComponent(buttonPlayTrankCode)
+                        .addComponent(labelFilaInfo)
+                        .addComponent(labelColumn)
+                        .addComponent(labelColumnInfo)))
                 .addContainerGap())
         );
 

@@ -197,47 +197,6 @@ public class Environment implements Runnable, Serializable{
             textPane.setText(txt.toString());
         }
     }
-    
-    public void runInst(){
-        try {
-            synth.open();
-            Map<Integer, Thread> channelThreads = new HashMap<>();
-            for (Object listExecute : listExecutes) {
-                if (listExecute instanceof ExeReproducir) {
-                    ExeReproducir er = (ExeReproducir) listExecute;
-                    int channel = er.getChannel();
-//                    if (channelThreads.containsKey(channel)) {
-//                        // Si ya hay un hilo ejecutándose en el mismo canal, espera a que termine
-//                        Thread thread = channelThreads.get(channel);
-//                        thread.join();
-//                    }
-                    Thread thread = new Thread(er);
-                    thread.start();
-                    thread.join(); // Espera a que este sonido termine antes de iniciar el siguiente
-//                    er.execute();
-                }else {
-                    ExeEsperar ee = (ExeEsperar) listExecute;
-                    int channel = ee.getChannel();
-//                    if (channelThreads.containsKey(channel)) {
-//                        // Si ya hay un hilo ejecutándose en el mismo canal, espera a que termine
-//                        Thread thread = channelThreads.get(channel);
-//                        thread.join();
-//                    }
-                    
-                    Thread thread = new Thread((Runnable) listExecute);
-                    thread.start();
-                    channelThreads.put(channel, thread);
-                }
-            }
-            for (Thread thread : channelThreads.values()) {
-                thread.join();
-            }  
-
-            synth.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void run() {

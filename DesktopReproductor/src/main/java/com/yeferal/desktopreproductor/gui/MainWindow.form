@@ -571,14 +571,16 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="panelCodePane" pref="437" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="labelFila" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="buttonCompile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="buttonPlayTrankCode" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelFilaInfo" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelColumn" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelColumnInfo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="labelInfoFile" alignment="0" pref="23" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="labelFila" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="buttonCompile" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="buttonPlayTrankCode" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelFilaInfo" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelColumn" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelColumnInfo" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>

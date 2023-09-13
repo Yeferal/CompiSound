@@ -8,7 +8,6 @@ package com.yeferal.desktopreproductor.gramm.comunication;
 /** CUP generated class containing symbol constants. */
 public class SymbolComCode {
   /* terminals */
-  public static final int pistanueva = 28;
   public static final int frecuencia = 27;
   public static final int pistas_c = 22;
   public static final int pistas_a = 21;
@@ -16,21 +15,23 @@ public class SymbolComCode {
   public static final int igual = 39;
   public static final int tipo_c = 7;
   public static final int tipo_a = 6;
-  public static final int do_rsv = 43;
+  public static final int identificador = 41;
+  public static final int do_rsv = 44;
   public static final int pista = 5;
   public static final int aleatorio = 18;
-  public static final int sol = 47;
-  public static final int mi = 45;
+  public static final int sol = 48;
+  public static final int mi = 46;
+  public static final int pista_c = 28;
   public static final int lista_c = 13;
   public static final int lista = 4;
-  public static final int si = 54;
+  public static final int si = 55;
   public static final int lista_a = 12;
-  public static final int sol_s = 52;
+  public static final int sol_s = 53;
   public static final int nombre_c = 9;
   public static final int nombre_a = 8;
   public static final int octava_c = 35;
-  public static final int fa_s = 51;
-  public static final int numero = 40;
+  public static final int fa_s = 52;
+  public static final int numero = 42;
   public static final int octava_a = 34;
   public static final int canal_c = 25;
   public static final int EOF = 0;
@@ -41,9 +42,9 @@ public class SymbolComCode {
   public static final int solicitud_c = 3;
   public static final int solicitud_a = 2;
   public static final int si_rsv = 19;
-  public static final int fa = 46;
-  public static final int la = 48;
-  public static final int re = 44;
+  public static final int fa = 47;
+  public static final int la = 49;
+  public static final int re = 45;
   public static final int nota_c = 33;
   public static final int pista_ab = 16;
   public static final int nota_a = 32;
@@ -52,17 +53,17 @@ public class SymbolComCode {
   public static final int datos_a = 29;
   public static final int listas_a = 10;
   public static final int canal_ab = 23;
-  public static final int la_s = 53;
-  public static final int re_s = 50;
+  public static final int la_s = 54;
+  public static final int re_s = 51;
   public static final int duracion_c = 37;
   public static final int nota_ab = 26;
   public static final int no = 20;
   public static final int duracion_a = 36;
-  public static final int decimal = 41;
+  public static final int decimal = 43;
   public static final int numero_rsv = 24;
   public static final int pistas = 15;
-  public static final int do_s = 49;
-  public static final int cadena = 42;
+  public static final int do_s = 50;
+  public static final int cadena = 40;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -92,7 +93,7 @@ public class SymbolComCode {
   "canal_c",
   "nota_ab",
   "frecuencia",
-  "pistanueva",
+  "pista_c",
   "datos_a",
   "datos_c",
   "canal_a",
@@ -104,9 +105,10 @@ public class SymbolComCode {
   "duracion_c",
   "cerrar",
   "igual",
+  "cadena",
+  "identificador",
   "numero",
   "decimal",
-  "cadena",
   "do_rsv",
   "re",
   "mi",
